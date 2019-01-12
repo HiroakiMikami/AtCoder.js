@@ -1,0 +1,13 @@
+*
+!*/
+!/.gitignore
+!/LICENSE
+!/README.md
+!/.circleci/config.yml
+!/tsconfig.json
+!/tslint.json
+!/package.json
+!/package-lock.json
+!/src/*.ts
+!/test/*.ts
+
