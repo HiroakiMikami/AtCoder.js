@@ -1,5 +1,6 @@
 import * as cheerio from "cheerio"
-import { HttpClient, IClient } from "./client"
+import { CachedClient, HttpClient, IClient } from "./client"
+import { Contest } from "./contest"
 import { Session } from "./session"
 
 export interface IUrl {
@@ -9,7 +10,7 @@ export interface IUrl {
 
 export class AtCoder {
     private url: { atcoder: string, atcoderProblems: string }
-    constructor(private session: Session, private client: IClient = new HttpClient(),
+    constructor(private session: Session, private client: IClient = new CachedClient(new HttpClient()),
                 url?: IUrl) {
         url = url || {}
         this.url = {
@@ -33,5 +34,8 @@ export class AtCoder {
                                                { session: new Session() })
         const contests = JSON.parse(response.body.toString())
         return contests.map((data: { id: string }) => data.id)
+    }
+    public contest(id: string): Contest {
+        return new Contest(id, this.session, this.client, this.url.atcoder)
     }
 }
