@@ -1,5 +1,6 @@
 import * as cheerio from "cheerio"
 import { IClient } from "./client"
+import { Problem } from "./problem"
 import { Session } from "./session"
 
 export class Contest {
@@ -9,15 +10,16 @@ export class Contest {
     }
 
     public async name(): Promise<string> {
-        this.sendRequest()
-        const tasks = await this.tasksPage
+        const tasks = await this.sendRequest()
         return tasks(`a.contest-title`).text()
     }
     public async problems(): Promise<string[]> {
-        this.sendRequest()
-        const tasks = await this.tasksPage
+        const tasks = await this.sendRequest()
         const problems = tasks(`table tbody td.text-center a`).map((_, elem) => tasks(elem).attr("href")).get()
         return problems.map((problem) => problem.split("/").slice(-1)[0])
+    }
+    public problem(id: string) {
+        return new Problem(this.id, id, this.session, this.client, this.atcoderUrl)
     }
     private sendRequest() {
         if (this.tasksPage === null) {
@@ -25,5 +27,6 @@ export class Contest {
                                              { session: this.session })
                 .then((response) => cheerio.load(response.body))
         }
+        return this.tasksPage
     }
 }
