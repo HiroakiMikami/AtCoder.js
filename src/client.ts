@@ -2,6 +2,7 @@ import * as request from "request"
 import { Session } from "./session"
 
 export interface IResponse {
+    code: number
     body: any
 }
 
@@ -28,7 +29,7 @@ export class HttpClient implements IClient {
                 resolve([response, body])
             })
         })
-        return { body: result[1] }
+        return { code: result[0].statusCode, body: result[1] }
     }
 
     public async postForm(url: string, data: any, options: IOptions): Promise<IResponse> {
@@ -43,7 +44,7 @@ export class HttpClient implements IClient {
                 resolve([response, body])
             })
         })
-        return { body: result[1] }
+        return { code: result[0].statusCode, body: result[1] }
     }
 }
 
@@ -65,5 +66,24 @@ export class CachedClient implements IClient {
     }
     public postForm(url: string, data: any, options: IOptions): Promise<IResponse> {
         return this.client.postForm(url, data, options)
+    }
+}
+
+export class ClientWithValidation implements IClient {
+    constructor(private client: IClient) {
+    }
+    public async get(url: string, options: IOptions): Promise<IResponse> {
+        const response = await this.client.get(url, options)
+        if (response.code >= 400) {
+            throw response
+        }
+        return response
+    }
+    public async postForm(url: string, data: any, options: IOptions): Promise<IResponse> {
+        const response = await this.client.postForm(url, data, options)
+        if (response.code >= 400) {
+            throw response
+        }
+        return response
     }
 }
