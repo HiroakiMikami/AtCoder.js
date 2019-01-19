@@ -39,7 +39,8 @@ describe("Contest", () => {
                     return Promise.resolve({ body: "<table><tbody>" +
                         "<tr><td class='text-center'><a href='contests/c1/tasks/foo'></a></td></tr>" +
                         "<tr><td class='text-center'><a href='contests/c1/tasks/bar'></a></td></tr>" +
-                        "</tbody></table"})
+                        "</tbody></table>",
+                    })
                 },
                 postForm(url: string, data: any, options: IOptions) {
                     history.push([url, data, options])
@@ -69,7 +70,9 @@ describe("Contest", () => {
                         "<td>1 ms</td><td>1 KB</td>" +
                         "<td><a href='contests/c1/submissions/0'></a></td>" +
                         "</tr>" +
-                        "</tbody></table>"})
+                        "</tbody></table>" +
+                        "<ul class=pagination><li class=active><a>1</a></li><li><a>2</a></li></ul>",
+                    })
                 },
                 postForm(url: string, data: any, options: IOptions) {
                     history.push([url, data, options])
@@ -79,16 +82,19 @@ describe("Contest", () => {
             const session = new Session()
             const contest = new Contest("c1", session, mockClient, "http://tmp")
             const submissions = await contest.mySubmissions()
-            submissions.should.deep.equal([
-                {
-                    codeSize: { value: 100, unit: "Byte" }, execTime: { value: 1, unit: "ms" }, id: "0",
-                    language: "Lang", memory: { value: 1, unit: "KB" },
-                    status: "AC", submissionTime: new Date("2019-01-01 00:00:00"), task: "foo", user: "User",
-                },
-            ])
+            submissions.should.deep.equal({
+                numberOfPages: 2,
+                submissions: [
+                    {
+                        codeSize: { value: 100, unit: "Byte" }, execTime: { value: 1, unit: "ms" }, id: "0",
+                        language: "Lang", memory: { value: 1, unit: "KB" },
+                        status: "AC", submissionTime: new Date("2019-01-01 00:00:00"), task: "foo", user: "User",
+                    },
+                ]})
 
             history.should.deep.equal([
-                ["http://tmp/contests/c1/submissions/me?f.Task=&f.Language=&f.Status=&f.User=&lang=en", { session }],
+                ["http://tmp/contests/c1/submissions/me?f.Task=&f.Language=&f.Status=&f.User=&page=1&lang=en",
+                 { session }],
             ])
 
         })
@@ -104,7 +110,9 @@ describe("Contest", () => {
                         "<td>User</td><td>Lang</td><td>0</td><td>100 Byte</td><td colspan=3>CE</td>" +
                         "<td><a href='contests/c1/submissions/0'></a></td>" +
                         "</tr>" +
-                        "</tbody></table>"})
+                        "</tbody></table>" +
+                        "<ul class=pagination><li class=active><a>1</a></li></ul>",
+                    })
                 },
                 postForm(url: string, data: any, options: IOptions) {
                     history.push([url, data, options])
@@ -114,16 +122,19 @@ describe("Contest", () => {
             const session = new Session()
             const contest = new Contest("c1", session, mockClient, "http://tmp")
             const submissions = await contest.mySubmissions()
-            submissions.should.deep.equal([
-                {
-                    codeSize: { value: 100, unit: "Byte" }, id: "0",
-                    language: "Lang",
-                    status: "CE", submissionTime: new Date("2019-01-01 00:00:00"), task: "foo", user: "User",
-                },
-            ])
+            submissions.should.deep.equal({
+                numberOfPages: 1,
+                submissions: [
+                    {
+                        codeSize: { value: 100, unit: "Byte" }, id: "0",
+                        language: "Lang",
+                        status: "CE", submissionTime: new Date("2019-01-01 00:00:00"), task: "foo", user: "User",
+                    },
+                ]})
 
             history.should.deep.equal([
-                ["http://tmp/contests/c1/submissions/me?f.Task=&f.Language=&f.Status=&f.User=&lang=en", { session }],
+                ["http://tmp/contests/c1/submissions/me?f.Task=&f.Language=&f.Status=&f.User=&page=1&lang=en",
+                 { session }],
             ])
 
         })
@@ -134,7 +145,9 @@ describe("Contest", () => {
                 get(url: string, options: IOptions) {
                     history.push([url, options])
                     return Promise.resolve({ body: "<table><tbody>" +
-                        "</tbody></table>"})
+                        "</tbody></table>" +
+                        "<ul class=pagination><li class=active><a>1</a></li></ul>",
+                    })
                 },
                 postForm(url: string, data: any, options: IOptions) {
                     history.push([url, data, options])
@@ -145,10 +158,11 @@ describe("Contest", () => {
             const contest = new Contest("c1", session, mockClient, "http://tmp")
             const submissions = await contest.mySubmissions(
                 { task: "c1_a", language: "L", status: Status.AC, user: "User"})
-            submissions.should.deep.equal([])
+            submissions.should.deep.equal({ numberOfPages: 1, submissions: [] })
 
             history.should.deep.equal([
-                ["http://tmp/contests/c1/submissions/me?f.Task=c1_a&f.Language=L&f.Status=AC&f.User=User&lang=en",
+                ["http://tmp/contests/c1/submissions/me?" +
+                    "f.Task=c1_a&f.Language=L&f.Status=AC&f.User=User&page=1&lang=en",
                  { session }],
             ])
 
@@ -160,14 +174,9 @@ describe("Contest", () => {
             const mockClient = {
                 get(url: string, options: IOptions) {
                     history.push([url, options])
-                    return Promise.resolve({ body: "<table><tbody>" +
-                        "<tr><td>2019-01-01 00:00:00</td>" +
-                        "<td><a href='contests/c1/tasks/foo'></a></td>" +
-                        "<td>User</td><td>Lang</td><td>0</td><td>100 Byte</td><td>AC</td>" +
-                        "<td>1 ms</td><td>1 KB</td>" +
-                        "<td><a href='contests/c1/submissions/0'></a></td>" +
-                        "</tr>" +
-                        "</tbody></table>"})
+                    return Promise.resolve({ body: "<table><tbody></tbody></table>" +
+                        "<ul class=pagination><li class=active><a>1</a></li></ul>",
+                    })
                 },
                 postForm(url: string, data: any, options: IOptions) {
                     history.push([url, data, options])
@@ -177,16 +186,11 @@ describe("Contest", () => {
             const session = new Session()
             const contest = new Contest("c1", session, mockClient, "http://tmp")
             const submissions = await contest.submissions()
-            submissions.should.deep.equal([
-                {
-                    codeSize: { value: 100, unit: "Byte" }, execTime: { value: 1, unit: "ms" }, id: "0",
-                    language: "Lang", memory: { value: 1, unit: "KB" },
-                    status: "AC", submissionTime: new Date("2019-01-01 00:00:00"), task: "foo", user: "User",
-                },
-            ])
+            submissions.should.deep.equal({ numberOfPages: 1, submissions: [] })
 
             history.should.deep.equal([
-                ["http://tmp/contests/c1/submissions?f.Task=&f.Language=&f.Status=&f.User=&lang=en", { session }],
+                ["http://tmp/contests/c1/submissions?f.Task=&f.Language=&f.Status=&f.User=&page=1&lang=en",
+                 { session }],
             ])
 
         })
@@ -197,7 +201,9 @@ describe("Contest", () => {
                 get(url: string, options: IOptions) {
                     history.push([url, options])
                     return Promise.resolve({ body: "<table><tbody>" +
-                        "</tbody></table>"})
+                        "</tbody></table>" +
+                        "<ul class=pagination><li class=active><a>1</a></li></ul>",
+                    })
                 },
                 postForm(url: string, data: any, options: IOptions) {
                     history.push([url, data, options])
@@ -208,10 +214,10 @@ describe("Contest", () => {
             const contest = new Contest("c1", session, mockClient, "http://tmp")
             const submissions = await contest.submissions(
                 { task: "c1_a", language: "L", status: Status.AC, user: "User"})
-            submissions.should.deep.equal([])
+            submissions.should.deep.equal({ numberOfPages: 1, submissions: [] })
 
             history.should.deep.equal([
-                ["http://tmp/contests/c1/submissions?f.Task=c1_a&f.Language=L&f.Status=AC&f.User=User&lang=en",
+                ["http://tmp/contests/c1/submissions?f.Task=c1_a&f.Language=L&f.Status=AC&f.User=User&page=1&lang=en",
                  { session }],
             ])
 

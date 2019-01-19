@@ -9,6 +9,12 @@ export interface ISubmissionQuery {
     language?: string
     status?: Status
     user?: string
+    page?: number
+}
+
+export interface ISubmissionPage {
+    numberOfPages: number
+    submissions: ISubmissionInfo[]
 }
 
 export class Contest {
@@ -32,34 +38,36 @@ export class Contest {
     public submission(id: string) {
         return new Submission(this.id, id, this.session, this.client, this.atcoderUrl)
     }
-    public async submissions(query?: ISubmissionQuery): Promise<ISubmissionInfo[]> {
+    public async submissions(query?: ISubmissionQuery): Promise<ISubmissionPage> {
         query = query || {}
         const response = await this.client.get(`${this.atcoderUrl}/contests/${this.id}/submissions?` +
             `f.Task=${query.task || ""}&` +
             `f.Language=${query.language || ""}&` +
             `f.Status=${query.status || ""}&` +
-            `f.User=${query.user || ""}` +
-            `&lang=en`,
+            `f.User=${query.user || ""}&` +
+            `page=${query.page || 1}&` +
+            `lang=en`,
             { session: this.session })
         const submissions = cheerio.load(response.body)
 
         return this.parseSubmissions(submissions)
     }
-    public async mySubmissions(query?: ISubmissionQuery): Promise<ISubmissionInfo[]> {
+    public async mySubmissions(query?: ISubmissionQuery): Promise<ISubmissionPage> {
         query = query || {}
         const response = await this.client.get(`${this.atcoderUrl}/contests/${this.id}/submissions/me?` +
             `f.Task=${query.task || ""}&` +
             `f.Language=${query.language || ""}&` +
             `f.Status=${query.status || ""}&` +
-            `f.User=${query.user || ""}` +
-            `&lang=en`,
+            `f.User=${query.user || ""}&` +
+            `page=${query.page || 1}&` +
+            `lang=en`,
             { session: this.session })
         const submissions = cheerio.load(response.body)
 
         return this.parseSubmissions(submissions)
     }
-    private parseSubmissions(submissions: CheerioStatic): ISubmissionInfo[] {
-        return submissions("table tbody tr").map((_, elem) => {
+    private parseSubmissions(submissions: CheerioStatic): ISubmissionPage {
+        const ss = submissions("table tbody tr").map((_, elem) => {
             const children = submissions(elem).children().get()
             if (children.length === 10) {
                 return {
@@ -97,6 +105,11 @@ export class Contest {
                 }
             }
         }).get()
+
+        const pages = submissions(submissions(".pagination").get()[0]).children()
+        const lastPage = pages.slice(-1)[0]
+        const numberOfPages = Number(submissions(lastPage).find("a").text())
+        return { numberOfPages, submissions: ss }
     }
     private sendRequestToTasks() {
         if (this.tasksPage === null) {
