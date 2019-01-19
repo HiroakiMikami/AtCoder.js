@@ -3,6 +3,7 @@ import { IClient } from "./client"
 import { Session } from "./session"
 import { ISubmissionInfo, Status, Submission, toStatus } from "./submission"
 import { ITaskInfo, Task } from "./task"
+import { toNumberWithUnits } from "./utils"
 
 export interface ISubmissionQuery {
     task?: string
@@ -34,14 +35,8 @@ export class Contest {
             const children = tasks(elem).children()
             const id = tasks(children[0]).find("a").attr("href").split("/").slice(-1)[0]
             const name = `${tasks(children[0]).text()} - ${tasks(children[1]).text()}`
-            const timeLimit = {
-                unit: tasks(children[2]).text().split(" ")[1],
-                value: Number(tasks(children[2]).text().split(" ")[0]),
-            }
-            const memoryLimit = {
-                unit: tasks(children[3]).text().split(" ")[1],
-                value: Number(tasks(children[3]).text().split(" ")[0]),
-            }
+            const timeLimit = toNumberWithUnits(tasks(children[2]).text())
+            const memoryLimit = toNumberWithUnits(tasks(children[3]).text())
             return {id, name, timeLimit, memoryLimit }
         }).get()
     }
@@ -84,20 +79,11 @@ export class Contest {
             const children = submissions(elem).children().get()
             if (children.length === 10) {
                 return {
-                    codeSize: {
-                        unit: submissions(children[5]).text().split(" ")[1],
-                        value: Number(submissions(children[5]).text().split(" ")[0]),
-                    },
-                    execTime: {
-                        unit: submissions(children[7]).text().split(" ")[1],
-                        value: Number(submissions(children[7]).text().split(" ")[0]),
-                    },
+                    codeSize: toNumberWithUnits(submissions(children[5]).text()),
+                    execTime: toNumberWithUnits(submissions(children[7]).text()),
                     id: submissions(children[9]).find("a").attr("href").split("/").slice(-1)[0],
                     language: submissions(children[3]).text(),
-                    memory: {
-                        unit: submissions(children[8]).text().split(" ")[1],
-                        value: Number(submissions(children[8]).text().split(" ")[0]),
-                    },
+                    memory: toNumberWithUnits(submissions(children[8]).text()),
                     status: toStatus(submissions(children[6]).text()),
                     submissionTime: new Date(submissions(children[0]).text()),
                     task: submissions(children[1]).find("a").attr("href").split("/").slice(-1)[0],
@@ -105,10 +91,7 @@ export class Contest {
                 }
             } else {
                 return {
-                    codeSize: {
-                        unit: submissions(children[5]).text().split(" ")[1],
-                        value: Number(submissions(children[5]).text().split(" ")[0]),
-                    },
+                    codeSize: toNumberWithUnits(submissions(children[5]).text()),
                     id: submissions(children[7]).find("a").attr("href").split("/").slice(-1)[0],
                     language: submissions(children[3]).text(),
                     status: toStatus(submissions(children[6]).text()),

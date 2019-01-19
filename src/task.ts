@@ -1,7 +1,7 @@
 import * as cheerio from "cheerio"
 import { IClient } from "./client"
 import { Session } from "./session"
-import { INumberWithUnits } from "./utils"
+import { INumberWithUnits, toNumberWithUnits } from "./utils"
 
 export interface IFormat {
     input: string
@@ -30,20 +30,12 @@ export class Task {
         const tasks = await this.sendRequest()
         const name = tasks(`span.h2`).text()
         const limits = tasks("div.col-sm-12>p").text()
-        const timeLimitStr = limits.split(" / ")[0].split(": ")[1]
-        const memoryLimitStr = limits.split(" / ")[1].split(": ")[1]
 
         return {
             id: this.id,
-            memoryLimit: {
-                unit: memoryLimitStr.split(" ")[1],
-                value: Number(memoryLimitStr.split(" ")[0]),
-            },
+            memoryLimit: toNumberWithUnits(limits.split(" / ")[1].split(": ")[1]),
             name,
-            timeLimit: {
-                unit: timeLimitStr.split(" ")[1],
-                value: Number(timeLimitStr.split(" ")[0]),
-            },
+            timeLimit: toNumberWithUnits(limits.split(" / ")[0].split(": ")[1]),
         }
     }
     public async score(): Promise<number> {
