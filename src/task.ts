@@ -12,7 +12,7 @@ export interface ISample {
     notes: string
 }
 
-export class Problem {
+export class Task {
     private tasksPage: Promise<CheerioStatic> | null
     constructor(private contestId: string, private id: string,
                 private session: Session, private client: IClient, private atcoderUrl: string) {

@@ -1,6 +1,6 @@
 import * as cheerio from "cheerio"
 import { IClient } from "./client"
-import { Problem } from "./problem"
+import { Task } from "./task"
 import { Session } from "./session"
 import { ISubmissionInfo, Status, Submission, toStatus } from "./submission"
 
@@ -27,13 +27,13 @@ export class Contest {
         const tasks = await this.sendRequestToTasks()
         return tasks(`a.contest-title`).text()
     }
-    public async problems(): Promise<string[]> {
+    public async tasks(): Promise<string[]> {
         const tasks = await this.sendRequestToTasks()
-        const problems = tasks(`table tbody td.text-center a`).map((_, elem) => tasks(elem).attr("href")).get()
-        return problems.map((problem) => problem.split("/").slice(-1)[0])
+        const list = tasks(`table tbody td.text-center a`).map((_, elem) => tasks(elem).attr("href")).get()
+        return list.map((task) => task.split("/").slice(-1)[0])
     }
-    public problem(id: string) {
-        return new Problem(this.id, id, this.session, this.client, this.atcoderUrl)
+    public task(id: string) {
+        return new Task(this.id, id, this.session, this.client, this.atcoderUrl)
     }
     public submission(id: string) {
         return new Submission(this.id, id, this.session, this.client, this.atcoderUrl)

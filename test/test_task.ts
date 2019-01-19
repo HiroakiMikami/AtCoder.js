@@ -2,12 +2,12 @@ import * as chai from "chai"
 chai.should()
 
 import { IOptions } from "../src/client"
-import { Problem } from "../src/problem"
+import { Task } from "../src/task"
 import { Session } from "../src/session"
 
-describe("Problem", () => {
+describe("Task", () => {
     describe("#name", () => {
-        it("return the problem name", async () => {
+        it("return the task name", async () => {
             const history: any[] = []
             const mockClient = {
                 get(url: string, options: IOptions) {
@@ -20,8 +20,8 @@ describe("Problem", () => {
                 },
             }
             const session = new Session()
-            const problem = new Problem("c1", "p1", session, mockClient, "http://tmp")
-            const name = await problem.name()
+            const task = new Task("c1", "p1", session, mockClient, "http://tmp")
+            const name = await task.name()
             name.should.equal("Title")
 
             history.should.deep.equal([
@@ -47,8 +47,8 @@ describe("Problem", () => {
                 },
             }
             const session = new Session()
-            const problem = new Problem("c1", "p1", session, mockClient, "http://tmp")
-            const score = await problem.score()
+            const task = new Task("c1", "p1", session, mockClient, "http://tmp")
+            const score = await task.score()
             score.should.equal(100)
 
             history.should.deep.equal([
@@ -57,7 +57,7 @@ describe("Problem", () => {
         })
     })
     describe("#problemStatement", () => {
-        it("return the problem statement", async () => {
+        it("return the task statement", async () => {
             const history: any[] = []
             const mockClient = {
                 get(url: string, options: IOptions) {
@@ -76,8 +76,8 @@ describe("Problem", () => {
                 },
             }
             const session = new Session()
-            const problem = new Problem("c1", "p1", session, mockClient, "http://tmp")
-            const statement = await problem.problemStatement()
+            const task = new Task("c1", "p1", session, mockClient, "http://tmp")
+            const statement = await task.problemStatement()
             statement.should.equal("<p>S1.</p><p>S2.</p>")
 
             history.should.deep.equal([
@@ -105,8 +105,8 @@ describe("Problem", () => {
                 },
             }
             const session = new Session()
-            const problem = new Problem("c1", "p1", session, mockClient, "http://tmp")
-            const c = await problem.constraints()
+            const task = new Task("c1", "p1", session, mockClient, "http://tmp")
+            const c = await task.constraints()
             c.should.equal("<p>S1.</p><p>S2.</p>")
 
             history.should.deep.equal([
@@ -138,8 +138,8 @@ describe("Problem", () => {
                 },
             }
             const session = new Session()
-            const problem = new Problem("c1", "p1", session, mockClient, "http://tmp")
-            const f = await problem.format()
+            const task = new Task("c1", "p1", session, mockClient, "http://tmp")
+            const f = await task.format()
             f.should.deep.equal({
                 input: "<p>I1.</p><p>I2.</p>",
                 output: "<p>O1.</p><p>O2.</p>",
@@ -178,8 +178,8 @@ describe("Problem", () => {
                 },
             }
             const session = new Session()
-            const problem = new Problem("c1", "p1", session, mockClient, "http://tmp")
-            const e = await problem.examples()
+            const task = new Task("c1", "p1", session, mockClient, "http://tmp")
+            const e = await task.examples()
             e.should.deep.equal([{
                 input: "<pre>Input</pre>",
                 notes: "<p>I1.</p><p>I2.</p><pre>N</pre><p>O1.</p><p>O2.</p>",
