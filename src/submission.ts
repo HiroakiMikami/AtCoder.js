@@ -1,6 +1,7 @@
 import * as cheerio from "cheerio"
 import { IClient } from "./client"
 import { Session } from "./session"
+import { INumberWithUnits } from "./utils"
 
 export enum Status {
     WJ = "WJ",
@@ -14,11 +15,6 @@ export function toStatus(value: any): Status[keyof Status] | undefined {
         }
     }
     return undefined
-}
-
-export interface INumberWithUnits {
-    value: number
-    unit: string
 }
 
 export interface ISubmissionInfo {

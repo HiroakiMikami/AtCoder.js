@@ -1,6 +1,7 @@
 import * as cheerio from "cheerio"
 import { IClient } from "./client"
 import { Session } from "./session"
+import { INumberWithUnits } from "./utils"
 
 export interface IFormat {
     input: string
@@ -10,6 +11,13 @@ export interface ISample {
     input: string
     output: string
     notes: string
+}
+
+export interface ITaskInfo {
+    id: string
+    name: string
+    timeLimit: INumberWithUnits
+    memoryLimit: INumberWithUnits
 }
 
 export class Task {

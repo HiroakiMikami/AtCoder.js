@@ -1,8 +1,8 @@
 import * as cheerio from "cheerio"
 import { IClient } from "./client"
-import { Task } from "./task"
 import { Session } from "./session"
 import { ISubmissionInfo, Status, Submission, toStatus } from "./submission"
+import { ITaskInfo, Task } from "./task"
 
 export interface ISubmissionQuery {
     task?: string
@@ -27,10 +27,23 @@ export class Contest {
         const tasks = await this.sendRequestToTasks()
         return tasks(`a.contest-title`).text()
     }
-    public async tasks(): Promise<string[]> {
+    public async tasks(): Promise<ITaskInfo[]> {
         const tasks = await this.sendRequestToTasks()
-        const list = tasks(`table tbody td.text-center a`).map((_, elem) => tasks(elem).attr("href")).get()
-        return list.map((task) => task.split("/").slice(-1)[0])
+        const list = tasks(`table tbody tr`)
+        return list.map((_, elem) => {
+            const children = tasks(elem).children()
+            const id = tasks(children[0]).find("a").attr("href").split("/").slice(-1)[0]
+            const name = `${tasks(children[0]).text()} - ${tasks(children[1]).text()}`
+            const timeLimit = {
+                unit: tasks(children[2]).text().split(" ")[1],
+                value: Number(tasks(children[2]).text().split(" ")[0]),
+            }
+            const memoryLimit = {
+                unit: tasks(children[3]).text().split(" ")[1],
+                value: Number(tasks(children[3]).text().split(" ")[0]),
+            }
+            return {id, name, timeLimit, memoryLimit }
+        }).get()
     }
     public task(id: string) {
         return new Task(this.id, id, this.session, this.client, this.atcoderUrl)

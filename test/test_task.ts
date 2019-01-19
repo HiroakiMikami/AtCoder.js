@@ -2,8 +2,8 @@ import * as chai from "chai"
 chai.should()
 
 import { IOptions } from "../src/client"
-import { Task } from "../src/task"
 import { Session } from "../src/session"
+import { Task } from "../src/task"
 
 describe("Task", () => {
     describe("#name", () => {
