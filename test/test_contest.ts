@@ -13,11 +13,11 @@ describe("Contest", () => {
             const mockClient = {
                 get(url: string, options: IOptions) {
                     history.push([url, options])
-                    return Promise.resolve({ body: "<a class='contest-title'>Title</a>" })
+                    return Promise.resolve({ code: 200, body: "<a class='contest-title'>Title</a>" })
                 },
                 postForm(url: string, data: any, options: IOptions) {
                     history.push([url, data, options])
-                    return Promise.resolve({ body: "" })
+                    return Promise.resolve({ code: 200, body: "" })
                 },
             }
             const session = new Session()
@@ -36,7 +36,8 @@ describe("Contest", () => {
             const mockClient = {
                 get(url: string, options: IOptions) {
                     history.push([url, options])
-                    return Promise.resolve({ body: "<table><tbody>" +
+                    return Promise.resolve({
+                        body: "<table><tbody>" +
                         "<tr>" +
                         "<td><a href='contests/c1/tasks/foo'>A</a></td>" +
                         "<td><a>Foo</a></td>" +
@@ -44,11 +45,12 @@ describe("Contest", () => {
                         "<td>1024 MB</td>" +
                         "</tr>" +
                         "</tbody></table>",
+                        code: 200,
                     })
                 },
                 postForm(url: string, data: any, options: IOptions) {
                     history.push([url, data, options])
-                    return Promise.resolve({ body: "" })
+                    return Promise.resolve({ code: 200, body: "" })
                 },
             }
             const session = new Session()
@@ -72,7 +74,8 @@ describe("Contest", () => {
             const mockClient = {
                 get(url: string, options: IOptions) {
                     history.push([url, options])
-                    return Promise.resolve({ body: "<table><tbody>" +
+                    return Promise.resolve({
+                        body: "<table><tbody>" +
                         "<tr><td>2019-01-01 00:00:00</td>" +
                         "<td><a href='contests/c1/tasks/foo'></a></td>" +
                         "<td>User</td><td>Lang</td><td>0</td><td>100 Byte</td><td>AC</td>" +
@@ -81,11 +84,12 @@ describe("Contest", () => {
                         "</tr>" +
                         "</tbody></table>" +
                         "<ul class=pagination><li class=active><a>1</a></li><li><a>2</a></li></ul>",
+                        code: 200,
                     })
                 },
                 postForm(url: string, data: any, options: IOptions) {
                     history.push([url, data, options])
-                    return Promise.resolve({ body: "" })
+                    return Promise.resolve({ code: 200, body: "" })
                 },
             }
             const session = new Session()
@@ -113,7 +117,8 @@ describe("Contest", () => {
             const mockClient = {
                 get(url: string, options: IOptions) {
                     history.push([url, options])
-                    return Promise.resolve({ body: "<table><tbody>" +
+                    return Promise.resolve({
+                        body: "<table><tbody>" +
                         "<tr><td>2019-01-01 00:00:00</td>" +
                         "<td><a href='contests/c1/tasks/foo'></a></td>" +
                         "<td>User</td><td>Lang</td><td>0</td><td>100 Byte</td><td colspan=3>CE</td>" +
@@ -121,11 +126,12 @@ describe("Contest", () => {
                         "</tr>" +
                         "</tbody></table>" +
                         "<ul class=pagination><li class=active><a>1</a></li></ul>",
+                        code: 200,
                     })
                 },
                 postForm(url: string, data: any, options: IOptions) {
                     history.push([url, data, options])
-                    return Promise.resolve({ body: "" })
+                    return Promise.resolve({ code: 200, body: "" })
                 },
             }
             const session = new Session()
@@ -153,14 +159,16 @@ describe("Contest", () => {
             const mockClient = {
                 get(url: string, options: IOptions) {
                     history.push([url, options])
-                    return Promise.resolve({ body: "<table><tbody>" +
+                    return Promise.resolve({
+                        body: "<table><tbody>" +
                         "</tbody></table>" +
                         "<ul class=pagination><li class=active><a>1</a></li></ul>",
+                        code: 200,
                     })
                 },
                 postForm(url: string, data: any, options: IOptions) {
                     history.push([url, data, options])
-                    return Promise.resolve({ body: "" })
+                    return Promise.resolve({ code: 200, body: "" })
                 },
             }
             const session = new Session()
@@ -183,13 +191,15 @@ describe("Contest", () => {
             const mockClient = {
                 get(url: string, options: IOptions) {
                     history.push([url, options])
-                    return Promise.resolve({ body: "<table><tbody></tbody></table>" +
+                    return Promise.resolve({
+                        body: "<table><tbody></tbody></table>" +
                         "<ul class=pagination><li class=active><a>1</a></li></ul>",
+                        code: 200,
                     })
                 },
                 postForm(url: string, data: any, options: IOptions) {
                     history.push([url, data, options])
-                    return Promise.resolve({ body: "" })
+                    return Promise.resolve({ code: 200, body: "" })
                 },
             }
             const session = new Session()
@@ -209,14 +219,16 @@ describe("Contest", () => {
             const mockClient = {
                 get(url: string, options: IOptions) {
                     history.push([url, options])
-                    return Promise.resolve({ body: "<table><tbody>" +
+                    return Promise.resolve({
+                        body: "<table><tbody>" +
                         "</tbody></table>" +
                         "<ul class=pagination><li class=active><a>1</a></li></ul>",
+                        code: 200,
                     })
                 },
                 postForm(url: string, data: any, options: IOptions) {
                     history.push([url, data, options])
-                    return Promise.resolve({ body: "" })
+                    return Promise.resolve({ code: 200, body: "" })
                 },
             }
             const session = new Session()

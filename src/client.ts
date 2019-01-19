@@ -2,6 +2,7 @@ import * as request from "request"
 import { Session } from "./session"
 
 export interface IResponse {
+    code: number
     body: any
 }
 
@@ -28,7 +29,7 @@ export class HttpClient implements IClient {
                 resolve([response, body])
             })
         })
-        return { body: result[1] }
+        return { code: result[0].statusCode, body: result[1] }
     }
 
     public async postForm(url: string, data: any, options: IOptions): Promise<IResponse> {
@@ -43,7 +44,7 @@ export class HttpClient implements IClient {
                 resolve([response, body])
             })
         })
-        return { body: result[1] }
+        return { code: result[0].statusCode, body: result[1] }
     }
 }
 

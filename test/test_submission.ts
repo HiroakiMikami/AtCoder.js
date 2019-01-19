@@ -12,12 +12,15 @@ describe("Submission", () => {
             const mockClient = {
                 get(url: string, options: IOptions) {
                     history.push([url, options])
-                    return Promise.resolve({ body: "<pre id=submission-code>" +
-                        "<ol><li>line1\n</li><li>line2\n</li></ol></pre>" })
+                    return Promise.resolve({
+                        body: "<pre id=submission-code>" +
+                        "<ol><li>line1\n</li><li>line2\n</li></ol></pre>",
+                        code: 200,
+                    })
                 },
                 postForm(url: string, data: any, options: IOptions) {
                     history.push([url, data, options])
-                    return Promise.resolve({ body: "" })
+                    return Promise.resolve({ code: 200, body: "" })
                 },
             }
             const session = new Session()
@@ -36,7 +39,8 @@ describe("Submission", () => {
             const mockClient = {
                 get(url: string, options: IOptions) {
                     history.push([url, options])
-                    return Promise.resolve({ body: "<table><tbody>" +
+                    return Promise.resolve({
+                        body: "<table><tbody>" +
                         "<tr><td></td><td>2019-01-01 00:00:00</td></tr>" +
                         "<tr><td></td><td><a href='contests/c1/tasks/foo'></a></td></tr>" +
                         "<tr><td></td><td>User</td></tr>" +
@@ -46,11 +50,13 @@ describe("Submission", () => {
                         "<tr><td></td><td>AC</td></tr>" +
                         "<tr><td></td><td>1 ms</td></tr>" +
                         "<tr><td></td><td>1 KB</td></tr>" +
-                        "</tbody></table>"})
+                        "</tbody></table>",
+                        code: 200,
+                    })
                 },
                 postForm(url: string, data: any, options: IOptions) {
                     history.push([url, data, options])
-                    return Promise.resolve({ body: "" })
+                    return Promise.resolve({ code: 200, body: "" })
                 },
             }
             const session = new Session()
@@ -73,7 +79,8 @@ describe("Submission", () => {
             const mockClient = {
                 get(url: string, options: IOptions) {
                     history.push([url, options])
-                    return Promise.resolve({ body: "<table><tbody>" +
+                    return Promise.resolve({
+                        body: "<table><tbody>" +
                         "<tr><td></td><td>2019-01-01 00:00:00</td></tr>" +
                         "<tr><td></td><td><a href='contests/c1/tasks/foo'></a></td></tr>" +
                         "<tr><td></td><td>User</td></tr>" +
@@ -81,11 +88,13 @@ describe("Submission", () => {
                         "<tr><td></td><td>0</td></tr>" +
                         "<tr><td></td><td>100 Byte</td></tr>" +
                         "<tr><td></td><td>CE</td></tr>" +
-                        "</tbody></table>"})
+                        "</tbody></table>",
+                        code: 200,
+                    })
                 },
                 postForm(url: string, data: any, options: IOptions) {
                     history.push([url, data, options])
-                    return Promise.resolve({ body: "" })
+                    return Promise.resolve({ code: 200, body: "" })
                 },
             }
             const session = new Session()
@@ -110,15 +119,18 @@ describe("Submission", () => {
             const mockClient = {
                 get(url: string, options: IOptions) {
                     history.push([url, options])
-                    return Promise.resolve({ body: "<table></table>" +
+                    return Promise.resolve({
+                        body: "<table></table>" +
                         "<table><tbody>" +
                         "<tr><td>S1</td><td>0 / 100</td><td>a01</td></tr>" +
                         "<tr><td>S2</td><td>100 / 100</td><td>b01, b02</td></tr>" +
-                        "</tbody></table>"})
+                        "</tbody></table>",
+                        code: 200,
+                    })
                 },
                 postForm(url: string, data: any, options: IOptions) {
                     history.push([url, data, options])
-                    return Promise.resolve({ body: "" })
+                    return Promise.resolve({ code: 200, body: "" })
                 },
             }
             const session = new Session()
@@ -139,12 +151,12 @@ describe("Submission", () => {
             const mockClient = {
                 get(url: string, options: IOptions) {
                     history.push([url, options])
-                    return Promise.resolve({ body: "<table></table>" })
+                    return Promise.resolve({ code: 200, body: "<table></table>" })
 
                 },
                 postForm(url: string, data: any, options: IOptions) {
                     history.push([url, data, options])
-                    return Promise.resolve({ body: "" })
+                    return Promise.resolve({ code: 200, body: "" })
                 },
             }
             const session = new Session()
@@ -164,16 +176,19 @@ describe("Submission", () => {
             const mockClient = {
                 get(url: string, options: IOptions) {
                     history.push([url, options])
-                    return Promise.resolve({ body: "<table></table><table></table>" +
+                    return Promise.resolve({
+                        body: "<table></table><table></table>" +
                         "<table><tbody>" +
                         "<tr><td>a01</td><td>WA</td><td>1 ms</td><td>1 KB</td></tr>" +
                         "<tr><td>b01</td><td>AC</td><td>1 ms</td><td>1 KB</td></tr>" +
                         "<tr><td>b02</td><td>AC</td><td>1 ms</td><td>1 KB</td></tr>" +
-                        "</tbody></table>"})
+                        "</tbody></table>",
+                        code: 200,
+                    })
                 },
                 postForm(url: string, data: any, options: IOptions) {
                     history.push([url, data, options])
-                    return Promise.resolve({ body: "" })
+                    return Promise.resolve({ code: 200, body: "" })
                 },
             }
             const session = new Session()
@@ -195,12 +210,12 @@ describe("Submission", () => {
             const mockClient = {
                 get(url: string, options: IOptions) {
                     history.push([url, options])
-                    return Promise.resolve({ body: "<table></table>" })
+                    return Promise.resolve({ code: 200, body: "<table></table>" })
 
                 },
                 postForm(url: string, data: any, options: IOptions) {
                     history.push([url, data, options])
-                    return Promise.resolve({ body: "" })
+                    return Promise.resolve({ code: 200, body: "" })
                 },
             }
             const session = new Session()
@@ -221,15 +236,18 @@ describe("Submission", () => {
             const mockClient = {
                 get(url: string, options: IOptions) {
                     history.push([url, options])
-                    return Promise.resolve({ body: "<div id=contest-nav-tabs class=col-sm-12></div>" +
+                    return Promise.resolve({
+                        body: "<div id=contest-nav-tabs class=col-sm-12></div>" +
                         "<div class=col-sm-12>" +
                         "<h4>Compile Error</h4>" +
                         "<pre>error message</pre>" +
-                        "</div>"})
+                        "</div>",
+                        code: 200,
+                    })
                 },
                 postForm(url: string, data: any, options: IOptions) {
                     history.push([url, data, options])
-                    return Promise.resolve({ body: "" })
+                    return Promise.resolve({ code: 200, body: "" })
                 },
             }
             const session = new Session()
@@ -247,13 +265,16 @@ describe("Submission", () => {
             const mockClient = {
                 get(url: string, options: IOptions) {
                     history.push([url, options])
-                    return Promise.resolve({ body: "<div id=contest-nav-tabs class=col-sm-12></div>" +
-                        "<div class=col-sm-12></div>"})
+                    return Promise.resolve({
+                        body: "<div id=contest-nav-tabs class=col-sm-12></div>" +
+                        "<div class=col-sm-12></div>",
+                        code: 200,
+                    })
 
                 },
                 postForm(url: string, data: any, options: IOptions) {
                     history.push([url, data, options])
-                    return Promise.resolve({ body: "" })
+                    return Promise.resolve({ code: 200, body: "" })
                 },
             }
             const session = new Session()
