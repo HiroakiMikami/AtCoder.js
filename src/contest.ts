@@ -61,25 +61,40 @@ export class Contest {
     private parseSubmissions(submissions: CheerioStatic): ISubmissionInfo[] {
         return submissions("table tbody tr").map((_, elem) => {
             const children = submissions(elem).children().get()
-            return {
-                codeSize: {
-                    unit: submissions(children[5]).text().split(" ")[1],
-                    value: Number(submissions(children[5]).text().split(" ")[0]),
-                },
-                execTime: {
-                    unit: submissions(children[7]).text().split(" ")[1],
-                    value: Number(submissions(children[7]).text().split(" ")[0]),
-                },
-                id: submissions(children[9]).find("a").attr("href").split("/").slice(-1)[0],
-                language: submissions(children[3]).text(),
-                memory: {
-                    unit: submissions(children[8]).text().split(" ")[1],
-                    value: Number(submissions(children[8]).text().split(" ")[0]),
-                },
-                status: toStatus(submissions(children[6]).text()),
-                submissionTime: new Date(submissions(children[0]).text()),
-                task: submissions(children[1]).find("a").attr("href").split("/").slice(-1)[0],
-                user: submissions(children[2]).text(),
+            if (children.length === 10) {
+                return {
+                    codeSize: {
+                        unit: submissions(children[5]).text().split(" ")[1],
+                        value: Number(submissions(children[5]).text().split(" ")[0]),
+                    },
+                    execTime: {
+                        unit: submissions(children[7]).text().split(" ")[1],
+                        value: Number(submissions(children[7]).text().split(" ")[0]),
+                    },
+                    id: submissions(children[9]).find("a").attr("href").split("/").slice(-1)[0],
+                    language: submissions(children[3]).text(),
+                    memory: {
+                        unit: submissions(children[8]).text().split(" ")[1],
+                        value: Number(submissions(children[8]).text().split(" ")[0]),
+                    },
+                    status: toStatus(submissions(children[6]).text()),
+                    submissionTime: new Date(submissions(children[0]).text()),
+                    task: submissions(children[1]).find("a").attr("href").split("/").slice(-1)[0],
+                    user: submissions(children[2]).text(),
+                }
+            } else {
+                return {
+                    codeSize: {
+                        unit: submissions(children[5]).text().split(" ")[1],
+                        value: Number(submissions(children[5]).text().split(" ")[0]),
+                    },
+                    id: submissions(children[7]).find("a").attr("href").split("/").slice(-1)[0],
+                    language: submissions(children[3]).text(),
+                    status: toStatus(submissions(children[6]).text()),
+                    submissionTime: new Date(submissions(children[0]).text()),
+                    task: submissions(children[1]).find("a").attr("href").split("/").slice(-1)[0],
+                    user: submissions(children[2]).text(),
+                }
             }
         }).get()
     }

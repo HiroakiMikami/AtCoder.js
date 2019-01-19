@@ -29,8 +29,8 @@ export interface ISubmissionInfo {
     language: string
     codeSize: INumberWithUnits
     status: Status
-    execTime: INumberWithUnits
-    memory: INumberWithUnits
+    execTime?: INumberWithUnits
+    memory?: INumberWithUnits
 }
 
 export interface ITestCaseSet {
@@ -61,30 +61,50 @@ export class Submission {
         const page = await this.sendRequest()
         const infoTable = page("table").get()[0]
         const data = page(infoTable).find("table tr td:nth-child(2)").get()
-        return {
-            codeSize: {
-                unit: page(data[5]).text().split(" ")[1],
-                value: Number(page(data[5]).text().split(" ")[0]),
-            },
-            execTime: {
-                unit: page(data[7]).text().split(" ")[1],
-                value: Number(page(data[7]).text().split(" ")[0]),
-            },
-            id: this.id,
-            language: page(data[3]).text(),
-            memory: {
-                unit: page(data[8]).text().split(" ")[1],
-                value: Number(page(data[8]).text().split(" ")[0]),
-            },
-            status: (toStatus(page(data[6]).text())) as Status,
-            submissionTime: new Date(page(data[0]).text()),
-            task:  page(data[1]).find("a").attr("href").split("/").slice(-1)[0],
-            user: page(data[2]).text(),
+        if (data.length === 9) {
+            return {
+                codeSize: {
+                    unit: page(data[5]).text().split(" ")[1],
+                    value: Number(page(data[5]).text().split(" ")[0]),
+                },
+                execTime: {
+                    unit: page(data[7]).text().split(" ")[1],
+                    value: Number(page(data[7]).text().split(" ")[0]),
+                },
+                id: this.id,
+                language: page(data[3]).text(),
+                memory: {
+                    unit: page(data[8]).text().split(" ")[1],
+                    value: Number(page(data[8]).text().split(" ")[0]),
+                },
+                status: (toStatus(page(data[6]).text())) as Status,
+                submissionTime: new Date(page(data[0]).text()),
+                task:  page(data[1]).find("a").attr("href").split("/").slice(-1)[0],
+                user: page(data[2]).text(),
+            }
+        } else {
+
+            return {
+                codeSize: {
+                    unit: page(data[5]).text().split(" ")[1],
+                    value: Number(page(data[5]).text().split(" ")[0]),
+                },
+                id: this.id,
+                language: page(data[3]).text(),
+                status: (toStatus(page(data[6]).text())) as Status,
+                submissionTime: new Date(page(data[0]).text()),
+                task:  page(data[1]).find("a").attr("href").split("/").slice(-1)[0],
+                user: page(data[2]).text(),
+            }
         }
     }
-    public async testCaseSets(): Promise<ITestCaseSet[]> {
+    public async testCaseSets(): Promise<ITestCaseSet[] | null> {
         const page = await this.sendRequest()
         const infoTable = page("table").get()[1]
+
+        if (page(infoTable).children().length === 0) {
+            return null
+        }
         return page(infoTable).find("table tr").map((_, elem) => {
             const children = page(elem).children()
             const name = page(children[0]).text()
@@ -94,9 +114,13 @@ export class Submission {
             return { name, score, maxScore, testCases }
         }).get()
     }
-    public async results(): Promise<ITestResult[]> {
+    public async results(): Promise<ITestResult[] | null> {
         const page = await this.sendRequest()
         const infoTable = page("table").get()[2]
+
+        if (page(infoTable).children().length === 0) {
+            return null
+        }
         return page(infoTable).find("table tr").map((_, elem) => {
             const children = page(elem).children()
             const name = page(children[0]).text()
@@ -112,12 +136,24 @@ export class Submission {
             return { name, status, execTime, memory }
         }).get()
     }
+    public async compileError(): Promise<string | null> {
+        const page = await this.sendRequest()
+        const elems = page("div.col-sm-12:not(#contst-nav-tabs)").children()
+        let retval = null
+        elems.each((index, elem) => {
+            if (page(elem).text() === "Compile Error") {
+                retval = page(elems[index + 1]).text()
+            }
+        })
+
+        return retval
+    }
 
     private sendRequest() {
         if (this.submissionPage === null) {
             this.submissionPage = this.client.get(
                 `${this.atcoderUrl}/contests/${this.contestId}/submissions/${this.id}?lang=en`,
-                { session: this.session }
+                { session: this.session },
             ).then((response) => cheerio.load(response.body))
         }
         return this.submissionPage

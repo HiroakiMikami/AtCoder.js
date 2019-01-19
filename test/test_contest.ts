@@ -93,6 +93,41 @@ describe("Contest", () => {
 
         })
 
+        it("parse HTML when the status is CE", async () => {
+            const history: any[] = []
+            const mockClient = {
+                get(url: string, options: IOptions) {
+                    history.push([url, options])
+                    return Promise.resolve({ body: "<table><tbody>" +
+                        "<tr><td>2019-01-01 00:00:00</td>" +
+                        "<td><a href='contests/c1/tasks/foo'></a></td>" +
+                        "<td>User</td><td>Lang</td><td>0</td><td>100 Byte</td><td colspan=3>CE</td>" +
+                        "<td><a href='contests/c1/submissions/0'></a></td>" +
+                        "</tr>" +
+                        "</tbody></table>"})
+                },
+                postForm(url: string, data: any, options: IOptions) {
+                    history.push([url, data, options])
+                    return Promise.resolve({ body: "" })
+                },
+            }
+            const session = new Session()
+            const contest = new Contest("c1", session, mockClient, "http://tmp")
+            const submissions = await contest.mySubmissions()
+            submissions.should.deep.equal([
+                {
+                    codeSize: { value: 100, unit: "Byte" }, id: "0",
+                    language: "Lang",
+                    status: "CE", submissionTime: new Date("2019-01-01 00:00:00"), task: "foo", user: "User",
+                },
+            ])
+
+            history.should.deep.equal([
+                ["http://tmp/contests/c1/submissions/me?f.Task=&f.Language=&f.Status=&f.User=&lang=en", { session }],
+            ])
+
+        })
+
         it("query the submissions", async () => {
             const history: any[] = []
             const mockClient = {
