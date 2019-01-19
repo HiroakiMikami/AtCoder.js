@@ -1,5 +1,5 @@
 import * as cheerio from "cheerio"
-import { CachedClient, HttpClient, IClient } from "./client"
+import { CachedClient, ClientWithValidation, HttpClient, IClient } from "./client"
 import { Contest } from "./contest"
 import { Session } from "./session"
 
@@ -10,7 +10,8 @@ export interface IUrl {
 
 export class AtCoder {
     private url: { atcoder: string, atcoderProblems: string }
-    constructor(private session: Session, private client: IClient = new CachedClient(new HttpClient()),
+    constructor(private session: Session,
+                private client: IClient = new ClientWithValidation(new CachedClient(new HttpClient())),
                 url?: IUrl) {
         url = url || {}
         this.url = {

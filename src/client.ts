@@ -68,3 +68,22 @@ export class CachedClient implements IClient {
         return this.client.postForm(url, data, options)
     }
 }
+
+export class ClientWithValidation implements IClient {
+    constructor(private client: IClient) {
+    }
+    public async get(url: string, options: IOptions): Promise<IResponse> {
+        const response = await this.client.get(url, options)
+        if (response.code >= 400) {
+            throw response
+        }
+        return response
+    }
+    public async postForm(url: string, data: any, options: IOptions): Promise<IResponse> {
+        const response = await this.client.postForm(url, data, options)
+        if (response.code >= 400) {
+            throw response
+        }
+        return response
+    }
+}
