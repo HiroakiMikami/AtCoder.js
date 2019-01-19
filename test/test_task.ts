@@ -6,13 +6,17 @@ import { Session } from "../src/session"
 import { Task } from "../src/task"
 
 describe("Task", () => {
-    describe("#name", () => {
-        it("return the task name", async () => {
+    describe("#info", () => {
+        it("return the task info", async () => {
             const history: any[] = []
             const mockClient = {
                 get(url: string, options: IOptions) {
                     history.push([url, options])
-                    return Promise.resolve({ body: "<span class='h2'>Title</a>" })
+                    return Promise.resolve({ body: "<div class=col-sm-12>" +
+                        "<span class='h2'>Title</a></span>" +
+                        "<p>Time Limit: 1 sec / Memory Limit: 1024 MB" +
+                        "</div>",
+                    })
                 },
                 postForm(url: string, data: any, options: IOptions) {
                     history.push([url, data, options])
@@ -21,8 +25,13 @@ describe("Task", () => {
             }
             const session = new Session()
             const task = new Task("c1", "p1", session, mockClient, "http://tmp")
-            const name = await task.name()
-            name.should.equal("Title")
+            const name = await task.info()
+            name.should.deep.equal({
+                id: "p1",
+                memoryLimit: { unit: "MB", value: 1024 },
+                name: "Title",
+                timeLimit: { unit: "sec", value: 1 },
+            })
 
             history.should.deep.equal([
                 ["http://tmp/contests/c1/tasks/p1?lang=en", { session }],

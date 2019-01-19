@@ -26,9 +26,25 @@ export class Task {
                 private session: Session, private client: IClient, private atcoderUrl: string) {
         this.tasksPage = null
     }
-    public async name(): Promise<string> {
+    public async info(): Promise<ITaskInfo> {
         const tasks = await this.sendRequest()
-        return tasks(`span.h2`).text()
+        const name = tasks(`span.h2`).text()
+        const limits = tasks("div.col-sm-12>p").text()
+        const timeLimitStr = limits.split(" / ")[0].split(": ")[1]
+        const memoryLimitStr = limits.split(" / ")[1].split(": ")[1]
+
+        return {
+            id: this.id,
+            memoryLimit: {
+                unit: memoryLimitStr.split(" ")[1],
+                value: Number(memoryLimitStr.split(" ")[0]),
+            },
+            name,
+            timeLimit: {
+                unit: timeLimitStr.split(" ")[1],
+                value: Number(timeLimitStr.split(" ")[0]),
+            },
+        }
     }
     public async score(): Promise<number> {
         const tasks = await this.sendRequest()
