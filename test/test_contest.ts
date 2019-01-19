@@ -30,15 +30,19 @@ describe("Contest", () => {
             ])
         })
     })
-    describe("#problems", () => {
-        it("get the list of the problems", async () => {
+    describe("#tasks", () => {
+        it("get the list of the tasks", async () => {
             const history: any[] = []
             const mockClient = {
                 get(url: string, options: IOptions) {
                     history.push([url, options])
                     return Promise.resolve({ body: "<table><tbody>" +
-                        "<tr><td class='text-center'><a href='contests/c1/tasks/foo'></a></td></tr>" +
-                        "<tr><td class='text-center'><a href='contests/c1/tasks/bar'></a></td></tr>" +
+                        "<tr>" +
+                        "<td><a href='contests/c1/tasks/foo'>A</a></td>" +
+                        "<td><a>Foo</a></td>" +
+                        "<td>1 sec</td>" +
+                        "<td>1024 MB</td>" +
+                        "</tr>" +
                         "</tbody></table>",
                     })
                 },
@@ -49,8 +53,13 @@ describe("Contest", () => {
             }
             const session = new Session()
             const contest = new Contest("c1", session, mockClient, "http://tmp")
-            const problems = await contest.problems()
-            problems.should.deep.equal(["foo", "bar"])
+            const tasks = await contest.tasks()
+            tasks.should.deep.equal([{
+                id: "foo",
+                memoryLimit: { unit: "MB", value: 1024 },
+                name: "A - Foo",
+                timeLimit: { unit: "sec", value: 1 },
+            }])
 
             history.should.deep.equal([
                 ["http://tmp/contests/c1/tasks?lang=en", { session }],

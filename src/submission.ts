@@ -1,6 +1,7 @@
 import * as cheerio from "cheerio"
 import { IClient } from "./client"
 import { Session } from "./session"
+import { INumberWithUnits, toNumberWithUnits } from "./utils"
 
 export enum Status {
     WJ = "WJ",
@@ -14,11 +15,6 @@ export function toStatus(value: any): Status[keyof Status] | undefined {
         }
     }
     return undefined
-}
-
-export interface INumberWithUnits {
-    value: number
-    unit: string
 }
 
 export interface ISubmissionInfo {
@@ -63,20 +59,11 @@ export class Submission {
         const data = page(infoTable).find("table tr td:nth-child(2)").get()
         if (data.length === 9) {
             return {
-                codeSize: {
-                    unit: page(data[5]).text().split(" ")[1],
-                    value: Number(page(data[5]).text().split(" ")[0]),
-                },
-                execTime: {
-                    unit: page(data[7]).text().split(" ")[1],
-                    value: Number(page(data[7]).text().split(" ")[0]),
-                },
+                codeSize: toNumberWithUnits(page(data[5]).text()),
+                execTime: toNumberWithUnits(page(data[7]).text()),
                 id: this.id,
                 language: page(data[3]).text(),
-                memory: {
-                    unit: page(data[8]).text().split(" ")[1],
-                    value: Number(page(data[8]).text().split(" ")[0]),
-                },
+                memory: toNumberWithUnits(page(data[8]).text()),
                 status: (toStatus(page(data[6]).text())) as Status,
                 submissionTime: new Date(page(data[0]).text()),
                 task:  page(data[1]).find("a").attr("href").split("/").slice(-1)[0],
@@ -85,10 +72,7 @@ export class Submission {
         } else {
 
             return {
-                codeSize: {
-                    unit: page(data[5]).text().split(" ")[1],
-                    value: Number(page(data[5]).text().split(" ")[0]),
-                },
+                codeSize: toNumberWithUnits(page(data[5]).text()),
                 id: this.id,
                 language: page(data[3]).text(),
                 status: (toStatus(page(data[6]).text())) as Status,
@@ -125,14 +109,8 @@ export class Submission {
             const children = page(elem).children()
             const name = page(children[0]).text()
             const status = toStatus(page(children[1]).text())
-            const execTime = {
-                unit: page(children[2]).text().split(" ")[1],
-                value: Number(page(children[2]).text().split(" ")[0]),
-            }
-            const memory = {
-                unit: page(children[3]).text().split(" ")[1],
-                value: Number(page(children[3]).text().split(" ")[0]),
-            }
+            const execTime = toNumberWithUnits(page(children[2]).text())
+            const memory = toNumberWithUnits(page(children[3]).text())
             return { name, status, execTime, memory }
         }).get()
     }

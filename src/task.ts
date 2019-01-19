@@ -1,6 +1,7 @@
 import * as cheerio from "cheerio"
 import { IClient } from "./client"
 import { Session } from "./session"
+import { INumberWithUnits, toNumberWithUnits } from "./utils"
 
 export interface IFormat {
     input: string
@@ -12,15 +13,30 @@ export interface ISample {
     notes: string
 }
 
-export class Problem {
+export interface ITaskInfo {
+    id: string
+    name: string
+    timeLimit: INumberWithUnits
+    memoryLimit: INumberWithUnits
+}
+
+export class Task {
     private tasksPage: Promise<CheerioStatic> | null
     constructor(private contestId: string, private id: string,
                 private session: Session, private client: IClient, private atcoderUrl: string) {
         this.tasksPage = null
     }
-    public async name(): Promise<string> {
+    public async info(): Promise<ITaskInfo> {
         const tasks = await this.sendRequest()
-        return tasks(`span.h2`).text()
+        const name = tasks(`span.h2`).text()
+        const limits = tasks("div.col-sm-12>p").text()
+
+        return {
+            id: this.id,
+            memoryLimit: toNumberWithUnits(limits.split(" / ")[1].split(": ")[1]),
+            name,
+            timeLimit: toNumberWithUnits(limits.split(" / ")[0].split(": ")[1]),
+        }
     }
     public async score(): Promise<number> {
         const tasks = await this.sendRequest()
