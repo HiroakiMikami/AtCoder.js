@@ -32,6 +32,19 @@ export class Contest {
     public submission(id: string) {
         return new Submission(this.id, id, this.session, this.client, this.atcoderUrl)
     }
+    public async submissions(query?: ISubmissionQuery): Promise<ISubmissionInfo[]> {
+        query = query || {}
+        const response = await this.client.get(`${this.atcoderUrl}/contests/${this.id}/submissions?` +
+            `f.Task=${query.task || ""}&` +
+            `f.Language=${query.language || ""}&` +
+            `f.Status=${query.status || ""}&` +
+            `f.User=${query.user || ""}` +
+            `&lang=en`,
+            { session: this.session })
+        const submissions = cheerio.load(response.body)
+
+        return this.parseSubmissions(submissions)
+    }
     public async mySubmissions(query?: ISubmissionQuery): Promise<ISubmissionInfo[]> {
         query = query || {}
         const response = await this.client.get(`${this.atcoderUrl}/contests/${this.id}/submissions/me?` +
@@ -43,6 +56,9 @@ export class Contest {
             { session: this.session })
         const submissions = cheerio.load(response.body)
 
+        return this.parseSubmissions(submissions)
+    }
+    private parseSubmissions(submissions: CheerioStatic): ISubmissionInfo[] {
         return submissions("table tbody tr").map((_, elem) => {
             const children = submissions(elem).children().get()
             return {
