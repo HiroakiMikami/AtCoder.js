@@ -1,3 +1,7 @@
+import * as cheerio from "cheerio"
+import { IClient } from "./client"
+import { Session } from "./session"
+
 export enum Status {
     WJ = "WJ",
     AC = "AC",
@@ -17,7 +21,7 @@ export interface INumberWithUnits {
     unit: string
 }
 
-export interface ISubmissionSummary {
+export interface ISubmissionInfo {
     id: string
     submissionTime: Date
     task: string
@@ -27,4 +31,95 @@ export interface ISubmissionSummary {
     status: Status
     execTime: INumberWithUnits
     memory: INumberWithUnits
+}
+
+export interface ITestCaseSet {
+    name: string
+    score: number
+    maxScore: number
+    testCases: string[]
+}
+export interface ITestResult {
+    name: string
+    status: Status,
+    execTime: INumberWithUnits
+    memory: INumberWithUnits
+}
+
+export class Submission {
+    public submissionPage: Promise<CheerioStatic> | null
+    constructor(private contestId: string, private id: string,
+                private session: Session, private client: IClient,
+                private atcoderUrl: string) {
+        this.submissionPage = null
+    }
+    public async sourceCode(): Promise<string> {
+        const page = await this.sendRequest()
+        return page("#submission-code").text()
+    }
+    public async info(): Promise<ISubmissionInfo> {
+        const page = await this.sendRequest()
+        const infoTable = page("table").get()[0]
+        const data = page(infoTable).find("table tr td:nth-child(2)").get()
+        return {
+            codeSize: {
+                unit: page(data[5]).text().split(" ")[1],
+                value: Number(page(data[5]).text().split(" ")[0]),
+            },
+            execTime: {
+                unit: page(data[7]).text().split(" ")[1],
+                value: Number(page(data[7]).text().split(" ")[0]),
+            },
+            id: this.id,
+            language: page(data[3]).text(),
+            memory: {
+                unit: page(data[8]).text().split(" ")[1],
+                value: Number(page(data[8]).text().split(" ")[0]),
+            },
+            status: (toStatus(page(data[6]).text())) as Status,
+            submissionTime: new Date(page(data[0]).text()),
+            task:  page(data[1]).find("a").attr("href").split("/").slice(-1)[0],
+            user: page(data[2]).text(),
+        }
+    }
+    public async testCaseSets(): Promise<ITestCaseSet[]> {
+        const page = await this.sendRequest()
+        const infoTable = page("table").get()[1]
+        return page(infoTable).find("table tr").map((_, elem) => {
+            const children = page(elem).children()
+            const name = page(children[0]).text()
+            const score = Number(page(children[1]).text().split("/")[0])
+            const maxScore = Number(page(children[1]).text().split("/")[1])
+            const testCases = page(children[2]).text().split(",").map((x) => x.replace(" ", ""))
+            return { name, score, maxScore, testCases }
+        }).get()
+    }
+    public async results(): Promise<ITestResult[]> {
+        const page = await this.sendRequest()
+        const infoTable = page("table").get()[2]
+        return page(infoTable).find("table tr").map((_, elem) => {
+            const children = page(elem).children()
+            const name = page(children[0]).text()
+            const status = toStatus(page(children[1]).text())
+            const execTime = {
+                unit: page(children[2]).text().split(" ")[1],
+                value: Number(page(children[2]).text().split(" ")[0]),
+            }
+            const memory = {
+                unit: page(children[3]).text().split(" ")[1],
+                value: Number(page(children[3]).text().split(" ")[0]),
+            }
+            return { name, status, execTime, memory }
+        }).get()
+    }
+
+    private sendRequest() {
+        if (this.submissionPage === null) {
+            this.submissionPage = this.client.get(
+                `${this.atcoderUrl}/contests/${this.contestId}/submissions/${this.id}?lang=en`,
+                { session: this.session }
+            ).then((response) => cheerio.load(response.body))
+        }
+        return this.submissionPage
+    }
 }

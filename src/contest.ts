@@ -2,7 +2,7 @@ import * as cheerio from "cheerio"
 import { IClient } from "./client"
 import { Problem } from "./problem"
 import { Session } from "./session"
-import { ISubmissionSummary, Status, toStatus } from "./submission"
+import { ISubmissionInfo, Status, Submission, toStatus } from "./submission"
 
 export interface ISubmissionQuery {
     task?: string
@@ -29,7 +29,10 @@ export class Contest {
     public problem(id: string) {
         return new Problem(this.id, id, this.session, this.client, this.atcoderUrl)
     }
-    public async mySubmissions(query?: ISubmissionQuery): Promise<ISubmissionSummary[]> {
+    public submission(id: string) {
+        return new Submission(this.id, id, this.session, this.client, this.atcoderUrl)
+    }
+    public async mySubmissions(query?: ISubmissionQuery): Promise<ISubmissionInfo[]> {
         query = query || {}
         const response = await this.client.get(`${this.atcoderUrl}/contests/${this.id}/submissions/me?` +
             `f.Task=${query.task || ""}&` +

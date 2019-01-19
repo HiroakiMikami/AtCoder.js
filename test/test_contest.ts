@@ -69,7 +69,7 @@ describe("Contest", () => {
                         "<td>1 ms</td><td>1 KB</td>" +
                         "<td><a href='contests/c1/submissions/0'></a></td>" +
                         "</tr>" +
-                        "</tbody></table"})
+                        "</tbody></table>"})
                 },
                 postForm(url: string, data: any, options: IOptions) {
                     history.push([url, data, options])
@@ -99,7 +99,7 @@ describe("Contest", () => {
                 get(url: string, options: IOptions) {
                     history.push([url, options])
                     return Promise.resolve({ body: "<table><tbody>" +
-                        "</tbody></table"})
+                        "</tbody></table>"})
                 },
                 postForm(url: string, data: any, options: IOptions) {
                     history.push([url, data, options])
