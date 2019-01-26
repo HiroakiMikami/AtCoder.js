@@ -1,9 +1,9 @@
 import * as chai from "chai"
 chai.should()
 
+import { AtCoder } from "../src/atcoder"
 import { IOptions } from "../src/client"
 import { Session } from "../src/session"
-import { Task } from "../src/task"
 
 describe("Task", () => {
     describe("#info", () => {
@@ -26,7 +26,8 @@ describe("Task", () => {
                 },
             }
             const session = new Session()
-            const task = new Task("c1", "p1", session, mockClient, "http://tmp")
+            const atcoder = new AtCoder(session, mockClient, { atcoder: "http://tmp" })
+            const task = atcoder.contest("c1").task("p1")
             const name = await task.info()
             name.should.deep.equal({
                 id: "p1",
@@ -59,7 +60,8 @@ describe("Task", () => {
                 },
             }
             const session = new Session()
-            const task = new Task("c1", "p1", session, mockClient, "http://tmp")
+            const atcoder = new AtCoder(session, mockClient, { atcoder: "http://tmp" })
+            const task = atcoder.contest("c1").task("p1")
             const score = await task.score()
             score.should.equal(100)
 
@@ -89,7 +91,8 @@ describe("Task", () => {
                 },
             }
             const session = new Session()
-            const task = new Task("c1", "p1", session, mockClient, "http://tmp")
+            const atcoder = new AtCoder(session, mockClient, { atcoder: "http://tmp" })
+            const task = atcoder.contest("c1").task("p1")
             const statement = await task.problemStatement()
             statement.should.equal("<p>S1.</p><p>S2.</p>")
 
@@ -119,7 +122,8 @@ describe("Task", () => {
                 },
             }
             const session = new Session()
-            const task = new Task("c1", "p1", session, mockClient, "http://tmp")
+            const atcoder = new AtCoder(session, mockClient, { atcoder: "http://tmp" })
+            const task = atcoder.contest("c1").task("p1")
             const c = await task.constraints()
             c.should.equal("<p>S1.</p><p>S2.</p>")
 
@@ -153,7 +157,8 @@ describe("Task", () => {
                 },
             }
             const session = new Session()
-            const task = new Task("c1", "p1", session, mockClient, "http://tmp")
+            const atcoder = new AtCoder(session, mockClient, { atcoder: "http://tmp" })
+            const task = atcoder.contest("c1").task("p1")
             const f = await task.format()
             f.should.deep.equal({
                 input: "<p>I1.</p><p>I2.</p>",
@@ -194,7 +199,8 @@ describe("Task", () => {
                 },
             }
             const session = new Session()
-            const task = new Task("c1", "p1", session, mockClient, "http://tmp")
+            const atcoder = new AtCoder(session, mockClient, { atcoder: "http://tmp" })
+            const task = atcoder.contest("c1").task("p1")
             const e = await task.examples()
             e.should.deep.equal([{
                 input: "<pre>Input</pre>",
