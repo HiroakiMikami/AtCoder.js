@@ -1,6 +1,5 @@
 import * as cheerio from "cheerio"
-import { IClient } from "./client"
-import { Session } from "./session"
+import { IParams } from "./atcoder"
 import { INumberWithUnits, toNumberWithUnits } from "./utils"
 
 export enum Status {
@@ -45,8 +44,7 @@ export interface ITestResult {
 export class Submission {
     public submissionPage: Promise<CheerioStatic> | null
     constructor(private contestId: string, private id: string,
-                private session: Session, private client: IClient,
-                private atcoderUrl: string) {
+                private params: IParams) {
         this.submissionPage = null
     }
     public async sourceCode(): Promise<string> {
@@ -129,9 +127,9 @@ export class Submission {
 
     private sendRequest() {
         if (this.submissionPage === null) {
-            this.submissionPage = this.client.get(
-                `${this.atcoderUrl}/contests/${this.contestId}/submissions/${this.id}?lang=en`,
-                { session: this.session },
+            this.submissionPage = this.params.client.get(
+                `${this.params.url.atcoder}/contests/${this.contestId}/submissions/${this.id}?lang=en`,
+                { session: this.params.session },
             ).then((response) => cheerio.load(response.body))
         }
         return this.submissionPage

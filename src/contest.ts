@@ -1,6 +1,5 @@
 import * as cheerio from "cheerio"
-import { IClient } from "./client"
-import { Session } from "./session"
+import { IParams } from "./atcoder"
 import { ISubmissionInfo, Status, Submission, toStatus } from "./submission"
 import { ITaskInfo, Task } from "./task"
 import { toNumberWithUnits } from "./utils"
@@ -20,7 +19,7 @@ export interface ISubmissionPage {
 
 export class Contest {
     private tasksPage: Promise<CheerioStatic> | null
-    constructor(private id: string, private session: Session, private client: IClient, private atcoderUrl: string) {
+    constructor(private id: string, private params: IParams) {
         this.tasksPage = null
     }
 
@@ -41,35 +40,35 @@ export class Contest {
         }).get()
     }
     public task(id: string) {
-        return new Task(this.id, id, this.session, this.client, this.atcoderUrl)
+        return new Task(this.id, id, this.params)
     }
     public submission(id: string) {
-        return new Submission(this.id, id, this.session, this.client, this.atcoderUrl)
+        return new Submission(this.id, id, this.params)
     }
     public async submissions(query?: ISubmissionQuery): Promise<ISubmissionPage> {
         query = query || {}
-        const response = await this.client.get(`${this.atcoderUrl}/contests/${this.id}/submissions?` +
+        const response = await this.params.client.get(`${this.params.url.atcoder}/contests/${this.id}/submissions?` +
             `f.Task=${query.task || ""}&` +
             `f.Language=${query.language || ""}&` +
             `f.Status=${query.status || ""}&` +
             `f.User=${query.user || ""}&` +
             `page=${query.page || 1}&` +
             `lang=en`,
-            { session: this.session })
+            { session: this.params.session })
         const submissions = cheerio.load(response.body)
 
         return this.parseSubmissions(submissions)
     }
     public async mySubmissions(query?: ISubmissionQuery): Promise<ISubmissionPage> {
         query = query || {}
-        const response = await this.client.get(`${this.atcoderUrl}/contests/${this.id}/submissions/me?` +
+        const response = await this.params.client.get(`${this.params.url.atcoder}/contests/${this.id}/submissions/me?` +
             `f.Task=${query.task || ""}&` +
             `f.Language=${query.language || ""}&` +
             `f.Status=${query.status || ""}&` +
             `f.User=${query.user || ""}&` +
             `page=${query.page || 1}&` +
             `lang=en`,
-            { session: this.session })
+            { session: this.params.session })
         const submissions = cheerio.load(response.body)
 
         return this.parseSubmissions(submissions)
@@ -109,8 +108,8 @@ export class Contest {
     }
     private sendRequestToTasks() {
         if (this.tasksPage === null) {
-            this.tasksPage = this.client.get(`${this.atcoderUrl}/contests/${this.id}/tasks?lang=en`,
-                                             { session: this.session })
+            this.tasksPage = this.params.client.get(`${this.params.url.atcoder}/contests/${this.id}/tasks?lang=en`,
+                                             { session: this.params.session })
                 .then((response) => cheerio.load(response.body))
         }
         return this.tasksPage

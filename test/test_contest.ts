@@ -1,8 +1,8 @@
 import * as chai from "chai"
 chai.should()
 
+import { AtCoder } from "../src/atcoder"
 import { IOptions } from "../src/client"
-import { Contest } from "../src/contest"
 import { Session } from "../src/session"
 import { Status } from "../src/submission"
 
@@ -21,7 +21,8 @@ describe("Contest", () => {
                 },
             }
             const session = new Session()
-            const contest = new Contest("c1", session, mockClient, "http://tmp")
+            const atcoder = new AtCoder(session, mockClient, { atcoder: "http://tmp" })
+            const contest = atcoder.contest("c1")
             const name = await contest.name()
             name.should.equal("Title")
 
@@ -54,7 +55,8 @@ describe("Contest", () => {
                 },
             }
             const session = new Session()
-            const contest = new Contest("c1", session, mockClient, "http://tmp")
+            const atcoder = new AtCoder(session, mockClient, { atcoder: "http://tmp" })
+            const contest = atcoder.contest("c1")
             const tasks = await contest.tasks()
             tasks.should.deep.equal([{
                 id: "foo",
@@ -93,7 +95,8 @@ describe("Contest", () => {
                 },
             }
             const session = new Session()
-            const contest = new Contest("c1", session, mockClient, "http://tmp")
+            const atcoder = new AtCoder(session, mockClient, { atcoder: "http://tmp" })
+            const contest = atcoder.contest("c1")
             const submissions = await contest.mySubmissions()
             submissions.should.deep.equal({
                 numberOfPages: 2,
@@ -135,7 +138,8 @@ describe("Contest", () => {
                 },
             }
             const session = new Session()
-            const contest = new Contest("c1", session, mockClient, "http://tmp")
+            const atcoder = new AtCoder(session, mockClient, { atcoder: "http://tmp" })
+            const contest = atcoder.contest("c1")
             const submissions = await contest.mySubmissions()
             submissions.should.deep.equal({
                 numberOfPages: 1,
@@ -172,7 +176,8 @@ describe("Contest", () => {
                 },
             }
             const session = new Session()
-            const contest = new Contest("c1", session, mockClient, "http://tmp")
+            const atcoder = new AtCoder(session, mockClient, { atcoder: "http://tmp" })
+            const contest = atcoder.contest("c1")
             const submissions = await contest.mySubmissions(
                 { task: "c1_a", language: "L", status: Status.AC, user: "User"})
             submissions.should.deep.equal({ numberOfPages: 1, submissions: [] })
@@ -203,7 +208,8 @@ describe("Contest", () => {
                 },
             }
             const session = new Session()
-            const contest = new Contest("c1", session, mockClient, "http://tmp")
+            const atcoder = new AtCoder(session, mockClient, { atcoder: "http://tmp" })
+            const contest = atcoder.contest("c1")
             const submissions = await contest.submissions()
             submissions.should.deep.equal({ numberOfPages: 1, submissions: [] })
 
@@ -232,7 +238,8 @@ describe("Contest", () => {
                 },
             }
             const session = new Session()
-            const contest = new Contest("c1", session, mockClient, "http://tmp")
+            const atcoder = new AtCoder(session, mockClient, { atcoder: "http://tmp" })
+            const contest = atcoder.contest("c1")
             const submissions = await contest.submissions(
                 { task: "c1_a", language: "L", status: Status.AC, user: "User"})
             submissions.should.deep.equal({ numberOfPages: 1, submissions: [] })

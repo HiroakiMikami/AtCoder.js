@@ -1,6 +1,6 @@
 {
   "private": true,
-  "name": "AtCoder.js",
+  "name": "atcoder.js",
   "version": "0.0.1",
   "description": "",
   "bin": {},
@@ -12,6 +12,8 @@
     "check-format": "$(npm bin)/tslint $(find ./src -name '*.ts') $(find ./test -name '*.ts')",
     "lint": "$(npm bin)/tslint --fix $(find ./src -name '*.ts') $(find ./test -name '*.ts')"
   },
+  "main": "out/src/atcoder.js",
+  "types": "out/src/atcoder.d.ts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/HiroakiMikami/AtCoder.js.git"

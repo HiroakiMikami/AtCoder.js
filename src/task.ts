@@ -1,6 +1,5 @@
 import * as cheerio from "cheerio"
-import { IClient } from "./client"
-import { Session } from "./session"
+import { IParams } from "./atcoder"
 import { INumberWithUnits, toNumberWithUnits } from "./utils"
 
 export interface IFormat {
@@ -23,7 +22,7 @@ export interface ITaskInfo {
 export class Task {
     private tasksPage: Promise<CheerioStatic> | null
     constructor(private contestId: string, private id: string,
-                private session: Session, private client: IClient, private atcoderUrl: string) {
+                private params: IParams) {
         this.tasksPage = null
     }
     public async info(): Promise<ITaskInfo> {
@@ -92,8 +91,9 @@ export class Task {
     }
     private sendRequest() {
         if (this.tasksPage === null) {
-            this.tasksPage = this.client.get(`${this.atcoderUrl}/contests/${this.contestId}/tasks/${this.id}?lang=en`,
-                                             { session: this.session })
+            this.tasksPage = this.params.client.get(
+                    `${this.params.url.atcoder}/contests/${this.contestId}/tasks/${this.id}?lang=en`,
+                    { session: this.params.session })
                 .then((response) => cheerio.load(response.body))
         }
         return this.tasksPage
