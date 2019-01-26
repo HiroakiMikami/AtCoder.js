@@ -10,10 +10,12 @@ export interface IUrl {
 
 export class AtCoder {
     private url: { atcoder: string, atcoderProblems: string }
+    private client: IClient
     constructor(private session: Session,
-                private client: IClient = new ClientWithValidation(new CachedClient(new HttpClient())),
+                private rawClient: IClient = new ClientWithValidation(new HttpClient()),
                 url?: IUrl) {
         url = url || {}
+        this.client = new CachedClient(rawClient)
         this.url = {
             atcoder: url.atcoder || "https://atcoder.jp",
             atcoderProblems: url.atcoderProblems || "https://kenkoooo.com/atcoder",
@@ -28,6 +30,15 @@ export class AtCoder {
 
         if (r2.body !== "") {
             throw new Error(`Login failed: ${r2.body}`)
+        }
+    }
+    public async isLoggedIn(): Promise<boolean> {
+        const page = await this.rawClient.get(this.url.atcoder, { session: this.session })
+        const dom = cheerio.load(page.body)
+        if (dom('a[href="javascript:form_logout.submit()"]').length === 0) {
+            return false
+        } else {
+            return true
         }
     }
     public async contests(): Promise<string[]> {
