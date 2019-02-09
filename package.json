@@ -12,8 +12,8 @@
     "check-format": "$(npm bin)/tslint $(find ./src -name '*.ts') $(find ./test -name '*.ts')",
     "lint": "$(npm bin)/tslint --fix $(find ./src -name '*.ts') $(find ./test -name '*.ts')"
   },
-  "main": "out/src/atcoder.js",
-  "types": "out/src/atcoder.d.ts",
+  "main": "out/src/main.js",
+  "types": "out/src/main.d.ts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/HiroakiMikami/AtCoder.js.git"
