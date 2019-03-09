@@ -21,7 +21,7 @@ describe("Contest", () => {
                 },
             }
             const session = new Session()
-            const atcoder = new AtCoder(session, mockClient, { atcoder: "http://tmp" })
+            const atcoder = new AtCoder(session, { rawClient: mockClient, url: { atcoder: "http://tmp" } })
             const contest = atcoder.contest("c1")
             const name = await contest.name()
             name.should.equal("Title")
@@ -55,7 +55,7 @@ describe("Contest", () => {
                 },
             }
             const session = new Session()
-            const atcoder = new AtCoder(session, mockClient, { atcoder: "http://tmp" })
+            const atcoder = new AtCoder(session, { rawClient: mockClient, url: { atcoder: "http://tmp" } })
             const contest = atcoder.contest("c1")
             const tasks = await contest.tasks()
             tasks.should.deep.equal([{
@@ -95,7 +95,7 @@ describe("Contest", () => {
                 },
             }
             const session = new Session()
-            const atcoder = new AtCoder(session, mockClient, { atcoder: "http://tmp" })
+            const atcoder = new AtCoder(session, { rawClient: mockClient, url: { atcoder: "http://tmp" } })
             const contest = atcoder.contest("c1")
             const submissions = await contest.mySubmissions()
             submissions.should.deep.equal({
@@ -138,7 +138,7 @@ describe("Contest", () => {
                 },
             }
             const session = new Session()
-            const atcoder = new AtCoder(session, mockClient, { atcoder: "http://tmp" })
+            const atcoder = new AtCoder(session, { rawClient: mockClient, url: { atcoder: "http://tmp" } })
             const contest = atcoder.contest("c1")
             const submissions = await contest.mySubmissions()
             submissions.should.deep.equal({
@@ -176,7 +176,7 @@ describe("Contest", () => {
                 },
             }
             const session = new Session()
-            const atcoder = new AtCoder(session, mockClient, { atcoder: "http://tmp" })
+            const atcoder = new AtCoder(session, { rawClient: mockClient, url: { atcoder: "http://tmp" } })
             const contest = atcoder.contest("c1")
             const submissions = await contest.mySubmissions(
                 { task: "c1_a", language: "L", status: Status.AC, user: "User"})
@@ -208,7 +208,7 @@ describe("Contest", () => {
                 },
             }
             const session = new Session()
-            const atcoder = new AtCoder(session, mockClient, { atcoder: "http://tmp" })
+            const atcoder = new AtCoder(session, { rawClient: mockClient, url: { atcoder: "http://tmp" } })
             const contest = atcoder.contest("c1")
             const submissions = await contest.submissions()
             submissions.should.deep.equal({ numberOfPages: 1, submissions: [] })
@@ -238,7 +238,7 @@ describe("Contest", () => {
                 },
             }
             const session = new Session()
-            const atcoder = new AtCoder(session, mockClient, { atcoder: "http://tmp" })
+            const atcoder = new AtCoder(session, { rawClient: mockClient, url: { atcoder: "http://tmp" } })
             const contest = atcoder.contest("c1")
             const submissions = await contest.submissions(
                 { task: "c1_a", language: "L", status: Status.AC, user: "User"})

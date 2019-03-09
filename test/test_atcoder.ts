@@ -20,7 +20,7 @@ describe("AtCoder", () => {
                 },
             }
             const session = new Session()
-            const atcoder = new AtCoder(session, mockClient, { atcoder: "http://tmp" })
+            const atcoder = new AtCoder(session, { rawClient: mockClient, url: { atcoder: "http://tmp" } })
             await atcoder.login("foo", "bar")
 
             history.should.deep.equal([
@@ -43,7 +43,7 @@ describe("AtCoder", () => {
                 },
             }
             const session = new Session()
-            const atcoder = new AtCoder(session, mockClient, { atcoder: "http://tmp" })
+            const atcoder = new AtCoder(session, { rawClient: mockClient, url: { atcoder: "http://tmp" } })
             const f = await atcoder.isLoggedIn()
             f.should.equal(true)
 
@@ -64,7 +64,7 @@ describe("AtCoder", () => {
                 },
             }
             const session = new Session()
-            const atcoder = new AtCoder(session, mockClient, { atcoder: "http://tmp" })
+            const atcoder = new AtCoder(session, { rawClient: mockClient, url: { atcoder: "http://tmp" } })
             const f = await atcoder.isLoggedIn()
             f.should.equal(false)
             await atcoder.isLoggedIn()
@@ -88,8 +88,10 @@ describe("AtCoder", () => {
                 },
             }
             const session = new Session()
-            const atcoder = new AtCoder(session, mockClient,
-                                        { atcoder: "http://tmp", atcoderProblems: "http://problems" })
+            const atcoder = new AtCoder(session, {
+                                            rawClient: mockClient,
+                                            url: { atcoder: "http://tmp", atcoderProblems: "http://problems" },
+                                        })
             const contests = await atcoder.contests()
             contests.should.deep.equal(["c1", "c2"])
 

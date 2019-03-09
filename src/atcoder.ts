@@ -15,16 +15,20 @@ export interface IParams {
     session: Session
 }
 
+export interface IOptions {
+    cachedir?: string
+    rawClient?: IClient
+    url?: IUrl
+}
+
 export class AtCoder {
     private params: IParams
-    constructor(session: Session,
-                rawClient: IClient = new ClientWithValidation(new HttpClient()),
-                url?: IUrl,
-                cachedir?: string) {
-        url = url || {}
+    constructor(session: Session, options: IOptions) {
+        const rawClient = options.rawClient || new ClientWithValidation(new HttpClient())
+        const url = options.url || {}
         let client: IClient = new CachedClient(rawClient)
-        if (cachedir !== null && cachedir !== undefined) {
-            client = new FilesystemCachedClient(rawClient, cachedir)
+        if (options.cachedir !== null && options.cachedir !== undefined) {
+            client = new FilesystemCachedClient(rawClient, options.cachedir)
         }
         this.params = {
             client,
