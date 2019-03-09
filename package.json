@@ -1,0 +1,46 @@
+{
+  "private": true,
+  "name": "atcoder.js",
+  "version": "0.0.1",
+  "description": "",
+  "bin": {},
+  "scripts": {
+    "compile": "$(npm bin)/tsc -p ./",
+    "doc": "$(npm bin)/typedoc --out doc ./src/",
+    "watch": "$(npm bin)/tsc -w -p ./",
+    "test": "$(npm bin)/mocha $(find ./out/test -name '*.js')",
+    "check-format": "$(npm bin)/tslint $(find ./src -name '*.ts') $(find ./test -name '*.ts')",
+    "lint": "$(npm bin)/tslint --fix $(find ./src -name '*.ts') $(find ./test -name '*.ts')",
+    "deploy": "./bin/deploy.bash"
+  },
+  "main": "out/src/main.js",
+  "types": "out/src/main.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HiroakiMikami/AtCoder.js.git"
+  },
+  "author": "Hiroaki Mikami",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/HiroakiMikami/AtCoder.js/issues"
+  },
+  "homepage": "https://github.com/HiroakiMikami/AtCoder.js#readme",
+  "devDependencies": {
+    "@types/chai": "^4.1.3",
+    "@types/cheerio": "^0.22.10",
+    "@types/mocha": "^5.2.0",
+    "@types/request": "^2.48.1",
+    "@types/tmp": "0.0.34",
+    "chai": "^4.1.2",
+    "mocha": "^5.1.1",
+    "tmp": "0.0.33",
+    "tslint": "^5.12.0",
+    "typedoc": "^0.11.1",
+    "typemoq": "^2.1.0",
+    "typescript": "^3.2.2"
+  },
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.2",
+    "request": "^2.88.0"
+  }
+}
