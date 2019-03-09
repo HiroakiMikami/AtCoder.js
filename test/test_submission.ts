@@ -25,7 +25,7 @@ describe("Submission", () => {
                 },
             }
             const session = new Session()
-            const atcoder = new AtCoder(session, mockClient, { atcoder: "http://tmp" })
+            const atcoder = new AtCoder(session, { rawClient: mockClient, url: { atcoder: "http://tmp" } })
             const submission = atcoder.contest("c1").submission("0")
             const code = await submission.sourceCode()
             code.should.equal("line1\nline2\n")
@@ -62,7 +62,7 @@ describe("Submission", () => {
                 },
             }
             const session = new Session()
-            const atcoder = new AtCoder(session, mockClient, { atcoder: "http://tmp" })
+            const atcoder = new AtCoder(session, { rawClient: mockClient, url: { atcoder: "http://tmp" } })
             const submission = atcoder.contest("c1").submission("0")
             const info = await submission.info()
             info.should.deep.equal(
@@ -101,7 +101,7 @@ describe("Submission", () => {
                 },
             }
             const session = new Session()
-            const atcoder = new AtCoder(session, mockClient, { atcoder: "http://tmp" })
+            const atcoder = new AtCoder(session, { rawClient: mockClient, url: { atcoder: "http://tmp" } })
             const submission = atcoder.contest("c1").submission("0")
             const info = await submission.info()
             info.should.deep.equal(
@@ -138,7 +138,7 @@ describe("Submission", () => {
                 },
             }
             const session = new Session()
-            const atcoder = new AtCoder(session, mockClient, { atcoder: "http://tmp" })
+            const atcoder = new AtCoder(session, { rawClient: mockClient, url: { atcoder: "http://tmp" } })
             const submission = atcoder.contest("c1").submission("0")
             const s = await submission.testCaseSets()
             s.should.deep.equal([
@@ -165,7 +165,7 @@ describe("Submission", () => {
                 },
             }
             const session = new Session()
-            const atcoder = new AtCoder(session, mockClient, { atcoder: "http://tmp" })
+            const atcoder = new AtCoder(session, { rawClient: mockClient, url: { atcoder: "http://tmp" } })
             const submission = atcoder.contest("c1").submission("0")
             const s = await submission.testCaseSets()
             should.not.exist(s)
@@ -198,7 +198,7 @@ describe("Submission", () => {
                 },
             }
             const session = new Session()
-            const atcoder = new AtCoder(session, mockClient, { atcoder: "http://tmp" })
+            const atcoder = new AtCoder(session, { rawClient: mockClient, url: { atcoder: "http://tmp" } })
             const submission = atcoder.contest("c1").submission("0")
             const r = await submission.results()
             r.should.deep.equal([
@@ -226,7 +226,7 @@ describe("Submission", () => {
                 },
             }
             const session = new Session()
-            const atcoder = new AtCoder(session, mockClient, { atcoder: "http://tmp" })
+            const atcoder = new AtCoder(session, { rawClient: mockClient, url: { atcoder: "http://tmp" } })
             const submission = atcoder.contest("c1").submission("0")
             const r = await submission.results()
             should.not.exist(r)
@@ -259,7 +259,7 @@ describe("Submission", () => {
                 },
             }
             const session = new Session()
-            const atcoder = new AtCoder(session, mockClient, { atcoder: "http://tmp" })
+            const atcoder = new AtCoder(session, { rawClient: mockClient, url: { atcoder: "http://tmp" } })
             const submission = atcoder.contest("c1").submission("0")
             const msg = await submission.compileError()
             msg.should.deep.equal("error message")
@@ -287,7 +287,7 @@ describe("Submission", () => {
                 },
             }
             const session = new Session()
-            const atcoder = new AtCoder(session, mockClient, { atcoder: "http://tmp" })
+            const atcoder = new AtCoder(session, { rawClient: mockClient, url: { atcoder: "http://tmp" } })
             const submission = atcoder.contest("c1").submission("0")
             const msg = await submission.compileError()
             should.not.exist(msg)
