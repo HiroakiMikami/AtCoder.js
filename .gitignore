@@ -10,4 +10,4 @@
 !/package-lock.json
 !/src/*.ts
 !/test/*.ts
-
+!/bin/*.bash
