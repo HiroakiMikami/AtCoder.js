@@ -1,5 +1,5 @@
 import * as cheerio from "cheerio"
-import { CachedClient, ClientWithValidation, HttpClient, IClient } from "./client"
+import { CachedClient, ClientWithValidation, FilesystemCachedClient, HttpClient, IClient } from "./client"
 import { Contest } from "./contest"
 import { Session } from "./session"
 
@@ -19,10 +19,15 @@ export class AtCoder {
     private params: IParams
     constructor(session: Session,
                 rawClient: IClient = new ClientWithValidation(new HttpClient()),
-                url?: IUrl) {
+                url?: IUrl,
+                cachedir?: string) {
         url = url || {}
+        let client: IClient = new CachedClient(rawClient)
+        if (cachedir !== null && cachedir !== undefined) {
+            client = new FilesystemCachedClient(rawClient, cachedir)
+        }
         this.params = {
-            client: new CachedClient(rawClient),
+            client,
             rawClient,
             session,
             url: {
