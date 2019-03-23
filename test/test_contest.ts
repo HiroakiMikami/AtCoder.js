@@ -13,11 +13,11 @@ describe("Contest", () => {
             const mockClient = {
                 get(url: string, options: IOptions) {
                     history.push([url, options])
-                    return Promise.resolve({ code: 200, body: "<a class='contest-title'>Title</a>" })
+                    return Promise.resolve({ statusCode: 200, body: "<a class='contest-title'>Title</a>" })
                 },
                 postForm(url: string, data: any, options: IOptions) {
                     history.push([url, data, options])
-                    return Promise.resolve({ code: 200, body: "" })
+                    return Promise.resolve({ statusCode: 200, body: "" })
                 },
             }
             const session = new Session()
@@ -46,12 +46,12 @@ describe("Contest", () => {
                         "<td>1024 MB</td>" +
                         "</tr>" +
                         "</tbody></table>",
-                        code: 200,
+                        statusCode: 200,
                     })
                 },
                 postForm(url: string, data: any, options: IOptions) {
                     history.push([url, data, options])
-                    return Promise.resolve({ code: 200, body: "" })
+                    return Promise.resolve({ statusCode: 200, body: "" })
                 },
             }
             const session = new Session()
@@ -86,12 +86,12 @@ describe("Contest", () => {
                         "</tr>" +
                         "</tbody></table>" +
                         "<ul class=pagination><li class=active><a>1</a></li><li><a>2</a></li></ul>",
-                        code: 200,
+                        statusCode: 200,
                     })
                 },
                 postForm(url: string, data: any, options: IOptions) {
                     history.push([url, data, options])
-                    return Promise.resolve({ code: 200, body: "" })
+                    return Promise.resolve({ statusCode: 200, body: "" })
                 },
             }
             const session = new Session()
@@ -129,12 +129,12 @@ describe("Contest", () => {
                         "</tr>" +
                         "</tbody></table>" +
                         "<ul class=pagination><li class=active><a>1</a></li></ul>",
-                        code: 200,
+                        statusCode: 200,
                     })
                 },
                 postForm(url: string, data: any, options: IOptions) {
                     history.push([url, data, options])
-                    return Promise.resolve({ code: 200, body: "" })
+                    return Promise.resolve({ statusCode: 200, body: "" })
                 },
             }
             const session = new Session()
@@ -167,12 +167,12 @@ describe("Contest", () => {
                         body: "<table><tbody>" +
                         "</tbody></table>" +
                         "<ul class=pagination><li class=active><a>1</a></li></ul>",
-                        code: 200,
+                        statusCode: 200,
                     })
                 },
                 postForm(url: string, data: any, options: IOptions) {
                     history.push([url, data, options])
-                    return Promise.resolve({ code: 200, body: "" })
+                    return Promise.resolve({ statusCode: 200, body: "" })
                 },
             }
             const session = new Session()
@@ -199,12 +199,12 @@ describe("Contest", () => {
                     return Promise.resolve({
                         body: "<table><tbody></tbody></table>" +
                         "<ul class=pagination><li class=active><a>1</a></li></ul>",
-                        code: 200,
+                        statusCode: 200,
                     })
                 },
                 postForm(url: string, data: any, options: IOptions) {
                     history.push([url, data, options])
-                    return Promise.resolve({ code: 200, body: "" })
+                    return Promise.resolve({ statusCode: 200, body: "" })
                 },
             }
             const session = new Session()
@@ -229,12 +229,12 @@ describe("Contest", () => {
                         body: "<table><tbody>" +
                         "</tbody></table>" +
                         "<ul class=pagination><li class=active><a>1</a></li></ul>",
-                        code: 200,
+                        statusCode: 200,
                     })
                 },
                 postForm(url: string, data: any, options: IOptions) {
                     history.push([url, data, options])
-                    return Promise.resolve({ code: 200, body: "" })
+                    return Promise.resolve({ statusCode: 200, body: "" })
                 },
             }
             const session = new Session()

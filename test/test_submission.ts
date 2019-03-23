@@ -16,12 +16,12 @@ describe("Submission", () => {
                     return Promise.resolve({
                         body: "<pre id=submission-code>" +
                         "<ol><li>line1\n</li><li>line2\n</li></ol></pre>",
-                        code: 200,
+                        statusCode: 200,
                     })
                 },
                 postForm(url: string, data: any, options: IOptions) {
                     history.push([url, data, options])
-                    return Promise.resolve({ code: 200, body: "" })
+                    return Promise.resolve({ statusCode: 200, body: "" })
                 },
             }
             const session = new Session()
@@ -53,12 +53,12 @@ describe("Submission", () => {
                         "<tr><td></td><td>1 ms</td></tr>" +
                         "<tr><td></td><td>1 KB</td></tr>" +
                         "</tbody></table>",
-                        code: 200,
+                        statusCode: 200,
                     })
                 },
                 postForm(url: string, data: any, options: IOptions) {
                     history.push([url, data, options])
-                    return Promise.resolve({ code: 200, body: "" })
+                    return Promise.resolve({ statusCode: 200, body: "" })
                 },
             }
             const session = new Session()
@@ -92,12 +92,12 @@ describe("Submission", () => {
                         "<tr><td></td><td>100 Byte</td></tr>" +
                         "<tr><td></td><td>CE</td></tr>" +
                         "</tbody></table>",
-                        code: 200,
+                        statusCode: 200,
                     })
                 },
                 postForm(url: string, data: any, options: IOptions) {
                     history.push([url, data, options])
-                    return Promise.resolve({ code: 200, body: "" })
+                    return Promise.resolve({ statusCode: 200, body: "" })
                 },
             }
             const session = new Session()
@@ -129,12 +129,12 @@ describe("Submission", () => {
                         "<tr><td>S1</td><td>0 / 100</td><td>a01</td></tr>" +
                         "<tr><td>S2</td><td>100 / 100</td><td>b01, b02</td></tr>" +
                         "</tbody></table>",
-                        code: 200,
+                        statusCode: 200,
                     })
                 },
                 postForm(url: string, data: any, options: IOptions) {
                     history.push([url, data, options])
-                    return Promise.resolve({ code: 200, body: "" })
+                    return Promise.resolve({ statusCode: 200, body: "" })
                 },
             }
             const session = new Session()
@@ -156,12 +156,12 @@ describe("Submission", () => {
             const mockClient = {
                 get(url: string, options: IOptions) {
                     history.push([url, options])
-                    return Promise.resolve({ code: 200, body: "<table></table>" })
+                    return Promise.resolve({ statusCode: 200, body: "<table></table>" })
 
                 },
                 postForm(url: string, data: any, options: IOptions) {
                     history.push([url, data, options])
-                    return Promise.resolve({ code: 200, body: "" })
+                    return Promise.resolve({ statusCode: 200, body: "" })
                 },
             }
             const session = new Session()
@@ -189,12 +189,12 @@ describe("Submission", () => {
                         "<tr><td>b01</td><td>AC</td><td>1 ms</td><td>1 KB</td></tr>" +
                         "<tr><td>b02</td><td>AC</td><td>1 ms</td><td>1 KB</td></tr>" +
                         "</tbody></table>",
-                        code: 200,
+                        statusCode: 200,
                     })
                 },
                 postForm(url: string, data: any, options: IOptions) {
                     history.push([url, data, options])
-                    return Promise.resolve({ code: 200, body: "" })
+                    return Promise.resolve({ statusCode: 200, body: "" })
                 },
             }
             const session = new Session()
@@ -217,12 +217,12 @@ describe("Submission", () => {
             const mockClient = {
                 get(url: string, options: IOptions) {
                     history.push([url, options])
-                    return Promise.resolve({ code: 200, body: "<table></table>" })
+                    return Promise.resolve({ statusCode: 200, body: "<table></table>" })
 
                 },
                 postForm(url: string, data: any, options: IOptions) {
                     history.push([url, data, options])
-                    return Promise.resolve({ code: 200, body: "" })
+                    return Promise.resolve({ statusCode: 200, body: "" })
                 },
             }
             const session = new Session()
@@ -250,12 +250,12 @@ describe("Submission", () => {
                         "<h4>Compile Error</h4>" +
                         "<pre>error message</pre>" +
                         "</div>",
-                        code: 200,
+                        statusCode: 200,
                     })
                 },
                 postForm(url: string, data: any, options: IOptions) {
                     history.push([url, data, options])
-                    return Promise.resolve({ code: 200, body: "" })
+                    return Promise.resolve({ statusCode: 200, body: "" })
                 },
             }
             const session = new Session()
@@ -277,13 +277,13 @@ describe("Submission", () => {
                     return Promise.resolve({
                         body: "<div id=contest-nav-tabs class=col-sm-12></div>" +
                         "<div class=col-sm-12></div>",
-                        code: 200,
+                        statusCode: 200,
                     })
 
                 },
                 postForm(url: string, data: any, options: IOptions) {
                     history.push([url, data, options])
-                    return Promise.resolve({ code: 200, body: "" })
+                    return Promise.resolve({ statusCode: 200, body: "" })
                 },
             }
             const session = new Session()

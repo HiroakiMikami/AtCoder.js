@@ -1,5 +1,6 @@
 import * as cheerio from "cheerio"
-import { CachedClient, ClientWithValidation, FilesystemCachedClient, HttpClient, IClient } from "./client"
+import { CompositeCache, FilesystemCache, ICache, MemoryCache } from "./cache"
+import { CachedClient, ClientWithValidation, HttpClient, IClient, IResponse } from "./client"
 import { Contest } from "./contest"
 import { Session } from "./session"
 
@@ -11,12 +12,16 @@ export interface IUrl {
 export interface IParams {
     url: { atcoder: string, atcoderProblems: string }
     client: IClient
-    rawClient: IClient
     session: Session
 }
 
-export interface IOptions {
+export interface ICacheOptions {
+    maxMemoryEntries: number | null
     cachedir?: string
+}
+
+export interface IOptions {
+    cache?: ICacheOptions
     rawClient?: IClient
     url?: IUrl
 }
@@ -25,14 +30,21 @@ export class AtCoder {
     private params: IParams
     constructor(session: Session, options: IOptions) {
         const rawClient = options.rawClient || new ClientWithValidation(new HttpClient())
+        const cacheOptions = options.cache || { maxMemoryEntries: 0 }
         const url = options.url || {}
-        let client: IClient = new CachedClient(rawClient)
-        if (options.cachedir !== null && options.cachedir !== undefined) {
-            client = new FilesystemCachedClient(rawClient, options.cachedir)
+        let client: IClient = rawClient
+        const caches: Array<ICache<string, IResponse>> = []
+        if (cacheOptions.maxMemoryEntries !== null) {
+            caches.push(new MemoryCache(cacheOptions.maxMemoryEntries))
+        }
+        if (cacheOptions.cachedir !== null && cacheOptions.cachedir !== undefined) {
+            caches.push(new FilesystemCache(cacheOptions.cachedir))
+        }
+        if (caches.length !== 0) {
+            client = new CachedClient(client, new CompositeCache(caches))
         }
         this.params = {
             client,
-            rawClient,
             session,
             url: {
                 atcoder: url.atcoder || "https://atcoder.jp",
@@ -50,9 +62,14 @@ export class AtCoder {
         if (r2.body !== "") {
             throw new Error(`Login failed: ${r2.body}`)
         }
+
+        // Clear all cache
+        if (this.params.client instanceof CachedClient) {
+            await this.params.client.clearCache()
+        }
     }
     public async isLoggedIn(): Promise<boolean> {
-        const page = await this.params.rawClient.get(this.params.url.atcoder, { session: this.params.session })
+        const page = await this.params.client.get(this.params.url.atcoder, { session: this.params.session })
         const dom = cheerio.load(page.body)
         if (dom('a[href="javascript:form_logout.submit()"]').length === 0) {
             return false
