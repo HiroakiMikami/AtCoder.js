@@ -1,7 +1,5 @@
-import * as fs from "fs"
-import * as path from "path"
 import * as request from "request"
-import { promisify } from "util"
+import { ICache } from "./cache"
 import { Session } from "./session"
 
 export interface IResponse {
@@ -52,51 +50,23 @@ export class HttpClient implements IClient {
 }
 
 export class CachedClient implements IClient {
-    private cachedContent: Map<string, IResponse>
-    constructor(private client: IClient) {
-        this.cachedContent = new Map()
+    constructor(private client: IClient, private cache: ICache<string, IResponse>) {
     }
-    public clearCache() {
-        this.cachedContent.clear()
+    public async clearCache() {
+        await this.cache.clear()
+        return
     }
-    public async get(url: string, options: IOptions): Promise<IResponse> {
-        if (this.cachedContent.has(url)) {
-            return this.cachedContent.get(url)
-        }
-        const response = await this.client.get(url, options)
-        this.cachedContent.set(url, response)
-        return response
-    }
-    public postForm(url: string, data: any, options: IOptions): Promise<IResponse> {
-        return this.client.postForm(url, data, options)
-    }
-}
-
-export class FilesystemCachedClient implements IClient {
-    constructor(private client: IClient, private cachedir: string) {}
-
     public async get(url: string, options: IOptions): Promise<IResponse> {
         const tag = encodeURIComponent(url)
-        if (await promisify(fs.exists)(path.join(this.cachedir, tag))) {
-            const content = await promisify(fs.readFile)(path.join(this.cachedir, tag), "utf8")
-            try {
-                const output = JSON.parse(content)
-                return output as IResponse
-            } catch (exception) {
-                return this.client.get(url, options)
-            }
+        const entry = await this.cache.get(tag)
+        if (entry !== null) {
+            return entry
         }
-
         const response = await this.client.get(url, options)
-        if (!await promisify(fs.exists)(this.cachedir)) {
-            await promisify(fs.mkdir)(this.cachedir)
-        }
         if (typeof response.body === "string") {
-            await promisify(fs.writeFile)(path.join(this.cachedir, tag), JSON.stringify(response))
+            return await this.cache.put(tag, response)
         }
-
         return response
-
     }
     public postForm(url: string, data: any, options: IOptions): Promise<IResponse> {
         return this.client.postForm(url, data, options)

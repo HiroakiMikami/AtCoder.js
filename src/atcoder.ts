@@ -1,5 +1,6 @@
 import * as cheerio from "cheerio"
-import { CachedClient, ClientWithValidation, FilesystemCachedClient, HttpClient, IClient } from "./client"
+import { FilesystemCache, MemoryCache } from "./cache"
+import { CachedClient, ClientWithValidation, HttpClient, IClient } from "./client"
 import { Contest } from "./contest"
 import { Session } from "./session"
 
@@ -15,8 +16,13 @@ export interface IParams {
     session: Session
 }
 
-export interface IOptions {
+export interface ICacheOptions {
+    maxMemoryEntries: number | null
     cachedir?: string
+}
+
+export interface IOptions {
+    cache?: ICacheOptions
     rawClient?: IClient
     url?: IUrl
 }
@@ -25,10 +31,14 @@ export class AtCoder {
     private params: IParams
     constructor(session: Session, options: IOptions) {
         const rawClient = options.rawClient || new ClientWithValidation(new HttpClient())
+        const cacheOptions = options.cache || { maxMemoryEntries: 0 }
         const url = options.url || {}
-        let client: IClient = new CachedClient(rawClient)
-        if (options.cachedir !== null && options.cachedir !== undefined) {
-            client = new FilesystemCachedClient(rawClient, options.cachedir)
+        let client: IClient = rawClient
+        if (cacheOptions.maxMemoryEntries !== null) {
+            client = new CachedClient(client, new MemoryCache(cacheOptions.maxMemoryEntries))
+        }
+        if (cacheOptions.cachedir !== null && cacheOptions.cachedir !== undefined) {
+            client = new CachedClient(rawClient, new FilesystemCache(cacheOptions.cachedir))
         }
         this.params = {
             client,
