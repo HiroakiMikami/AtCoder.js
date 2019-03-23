@@ -17,12 +17,12 @@ describe("Task", () => {
                         "<span class='h2'>Title</a></span>" +
                         "<p>Time Limit: 1 sec / Memory Limit: 1024 MB" +
                         "</div>",
-                        code: 200,
+                        statusCode: 200,
                     })
                 },
                 postForm(url: string, data: any, options: IOptions) {
                     history.push([url, data, options])
-                    return Promise.resolve({ code: 200, body: "" })
+                    return Promise.resolve({ statusCode: 200, body: "" })
                 },
             }
             const session = new Session()
@@ -51,12 +51,12 @@ describe("Task", () => {
                         body: "<div id=task-statement><span class=lang-en>" +
                             "<p><var>100</var></p><p><var>N</var></p>" +
                             "</span></div>",
-                        code: 200,
+                        statusCode: 200,
                     })
                 },
                 postForm(url: string, data: any, options: IOptions) {
                     history.push([url, data, options])
-                    return Promise.resolve({ code: 200, body: "" })
+                    return Promise.resolve({ statusCode: 200, body: "" })
                 },
             }
             const session = new Session()
@@ -82,12 +82,12 @@ describe("Task", () => {
                             "<p>S1.</p><p>S2.</p>" +
                             "</section></div>" +
                             "</span></div>",
-                        code: 200,
+                        statusCode: 200,
                     })
                 },
                 postForm(url: string, data: any, options: IOptions) {
                     history.push([url, data, options])
-                    return Promise.resolve({ code: 200, body: "" })
+                    return Promise.resolve({ statusCode: 200, body: "" })
                 },
             }
             const session = new Session()
@@ -113,12 +113,12 @@ describe("Task", () => {
                             "<p>S1.</p><p>S2.</p>" +
                             "</section></div>" +
                             "</span></div>",
-                        code: 200,
+                        statusCode: 200,
                     })
                 },
                 postForm(url: string, data: any, options: IOptions) {
                     history.push([url, data, options])
-                    return Promise.resolve({ code: 200, body: "" })
+                    return Promise.resolve({ statusCode: 200, body: "" })
                 },
             }
             const session = new Session()
@@ -148,12 +148,12 @@ describe("Task", () => {
                             "<p>O1.</p><p>O2.</p>" +
                             "</section></div></div>" +
                             "</span></div>",
-                        code: 200,
+                        statusCode: 200,
                     })
                 },
                 postForm(url: string, data: any, options: IOptions) {
                     history.push([url, data, options])
-                    return Promise.resolve({ code: 200, body: "" })
+                    return Promise.resolve({ statusCode: 200, body: "" })
                 },
             }
             const session = new Session()
@@ -190,12 +190,12 @@ describe("Task", () => {
                             "<p>O1.</p><p>O2.</p>" +
                             "</section></div>" +
                             "</span></div>",
-                        code: 200,
+                        statusCode: 200,
                     })
                 },
                 postForm(url: string, data: any, options: IOptions) {
                     history.push([url, data, options])
-                    return Promise.resolve({ code: 200, body: "" })
+                    return Promise.resolve({ statusCode: 200, body: "" })
                 },
             }
             const session = new Session()

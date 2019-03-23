@@ -11,22 +11,22 @@ describe("FilesystemCachedClient", () => {
             const mockClient = {
                 get(url: string, options: IOptions) {
                     history.push([url, options])
-                    return Promise.resolve({ code: 200, body: "" })
+                    return Promise.resolve({ statusCode: 200, body: "" })
                 },
                 postForm(url: string, data: any, options: IOptions) {
                     history.push([url, data, options])
-                    return Promise.resolve({ code: 200, body: "" })
+                    return Promise.resolve({ statusCode: 200, body: "" })
                 },
             }
             const c = new CachedClient(mockClient, new MemoryCache())
 
             const session = new Session()
             const res = await c.get("http://tmp", { session })
-            res.should.deep.equal({ code: 200, body: "" })
+            res.should.deep.equal({ statusCode: 200, body: "" })
             history.should.deep.equal([["http://tmp", { session }]])
 
             const res2 = await c.get("http://tmp", { session })
-            res2.should.deep.equal({ code: 200, body: "" })
+            res2.should.deep.equal({ statusCode: 200, body: "" })
             history.should.deep.equal([["http://tmp", { session }]])
         })
         it("does not cache the response if body is not string", async () => {
@@ -34,22 +34,22 @@ describe("FilesystemCachedClient", () => {
             const mockClient = {
                 get(url: string, options: IOptions) {
                     history.push([url, options])
-                    return Promise.resolve({ code: 200, body: Buffer.from("xxx") })
+                    return Promise.resolve({ statusCode: 200, body: Buffer.from("xxx") })
                 },
                 postForm(url: string, data: any, options: IOptions) {
                     history.push([url, data, options])
-                    return Promise.resolve({ code: 200, body: "" })
+                    return Promise.resolve({ statusCode: 200, body: "" })
                 },
             }
             const c = new CachedClient(mockClient, new MemoryCache())
 
             const session = new Session()
             const res = await c.get("http://tmp", { session })
-            res.should.deep.equal({ code: 200, body: Buffer.from("xxx") })
+            res.should.deep.equal({ statusCode: 200, body: Buffer.from("xxx") })
             history.should.deep.equal([["http://tmp", { session }]])
 
             const res2 = await c.get("http://tmp", { session })
-            res2.should.deep.equal({ code: 200, body: Buffer.from("xxx") })
+            res2.should.deep.equal({ statusCode: 200, body: Buffer.from("xxx") })
             history.should.deep.equal([["http://tmp", { session }], ["http://tmp", { session }]])
         })
     })
@@ -59,22 +59,22 @@ describe("FilesystemCachedClient", () => {
             const mockClient = {
                 get(url: string, options: IOptions) {
                     history.push([url, options])
-                    return Promise.resolve({ code: 200, body: "" })
+                    return Promise.resolve({ statusCode: 200, body: "" })
                 },
                 postForm(url: string, data: any, options: IOptions) {
                     history.push([url, data, options])
-                    return Promise.resolve({ code: 200, body: "" })
+                    return Promise.resolve({ statusCode: 200, body: "" })
                 },
             }
             const c = new CachedClient(mockClient, new MemoryCache())
 
             const session = new Session()
             const res = await c.postForm("http://tmp", "", { session })
-            res.should.deep.equal({ code: 200, body: "" })
+            res.should.deep.equal({ statusCode: 200, body: "" })
             history.should.deep.equal([["http://tmp", "", { session }]])
 
             const res2 = await c.postForm("http://tmp", "", { session })
-            res2.should.deep.equal({ code: 200, body: "" })
+            res2.should.deep.equal({ statusCode: 200, body: "" })
             history.should.deep.equal([["http://tmp", "", { session }], ["http://tmp", "", { session }]])
         })
     })
@@ -87,18 +87,18 @@ describe("ClientWithValidation", () => {
             const mockClient = {
                 get(url: string, options: IOptions) {
                     history.push([url, options])
-                    return Promise.resolve({ code: 200, body: "" })
+                    return Promise.resolve({ statusCode: 200, body: "" })
                 },
                 postForm(url: string, data: any, options: IOptions) {
                     history.push([url, data, options])
-                    return Promise.resolve({ code: 200, body: "" })
+                    return Promise.resolve({ statusCode: 200, body: "" })
                 },
             }
             const c = new ClientWithValidation(mockClient)
 
             const session = new Session()
             const res = await c.get("http://tmp", { session })
-            res.should.deep.equal({ code: 200, body: "" })
+            res.should.deep.equal({ statusCode: 200, body: "" })
             history.should.deep.equal([["http://tmp", { session }]])
         })
         it("throw error if the code represents error", async () => {
@@ -106,11 +106,11 @@ describe("ClientWithValidation", () => {
             const mockClient = {
                 get(url: string, options: IOptions) {
                     history.push([url, options])
-                    return Promise.resolve({ code: 404, body: "" })
+                    return Promise.resolve({ statusCode: 404, body: "" })
                 },
                 postForm(url: string, data: any, options: IOptions) {
                     history.push([url, data, options])
-                    return Promise.resolve({ code: 404, body: "" })
+                    return Promise.resolve({ statusCode: 404, body: "" })
                 },
             }
             const c = new ClientWithValidation(mockClient)
@@ -119,7 +119,7 @@ describe("ClientWithValidation", () => {
             try {
                 await c.get("http://tmp", { session })
             } catch (e) {
-                e.should.deep.equal({ code: 404, body: "" })
+                e.should.deep.equal({ statusCode: 404, body: "" })
                 history.should.deep.equal([["http://tmp", { session }]])
                 return
             }
@@ -132,18 +132,18 @@ describe("ClientWithValidation", () => {
             const mockClient = {
                 get(url: string, options: IOptions) {
                     history.push([url, options])
-                    return Promise.resolve({ code: 200, body: "" })
+                    return Promise.resolve({ statusCode: 200, body: "" })
                 },
                 postForm(url: string, data: any, options: IOptions) {
                     history.push([url, data, options])
-                    return Promise.resolve({ code: 200, body: "" })
+                    return Promise.resolve({ statusCode: 200, body: "" })
                 },
             }
             const c = new ClientWithValidation(mockClient)
 
             const session = new Session()
             const res = await c.postForm("http://tmp", "", { session })
-            res.should.deep.equal({ code: 200, body: "" })
+            res.should.deep.equal({ statusCode: 200, body: "" })
             history.should.deep.equal([["http://tmp", "", { session }]])
         })
         it("throw error if the code represents error", async () => {
@@ -151,11 +151,11 @@ describe("ClientWithValidation", () => {
             const mockClient = {
                 get(url: string, options: IOptions) {
                     history.push([url, options])
-                    return Promise.resolve({ code: 404, body: "" })
+                    return Promise.resolve({ statusCode: 404, body: "" })
                 },
                 postForm(url: string, data: any, options: IOptions) {
                     history.push([url, data, options])
-                    return Promise.resolve({ code: 404, body: "" })
+                    return Promise.resolve({ statusCode: 404, body: "" })
                 },
             }
             const c = new ClientWithValidation(mockClient)
@@ -164,7 +164,7 @@ describe("ClientWithValidation", () => {
             try {
                 await c.postForm("http://tmp", "", { session })
             } catch (e) {
-                e.should.deep.equal({ code: 404, body: "" })
+                e.should.deep.equal({ statusCode: 404, body: "" })
                 history.should.deep.equal([["http://tmp", "", { session }]])
                 return
             }

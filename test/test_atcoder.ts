@@ -12,11 +12,13 @@ describe("AtCoder", () => {
             const mockClient = {
                 get(url: string, options: IOptions) {
                     history.push([url, options])
-                    return Promise.resolve({ code: 200, body: "<input type='hidden' name='csrf_token' value='tmp'>" })
+                    return Promise.resolve(
+                        { statusCode: 200, body: "<input type='hidden' name='csrf_token' value='tmp'>" },
+                    )
                 },
                 postForm(url: string, data: any, options: IOptions) {
                     history.push([url, data, options])
-                    return Promise.resolve({ code: 200, body: "" })
+                    return Promise.resolve({ statusCode: 200, body: "" })
                 },
             }
             const session = new Session()
@@ -35,11 +37,11 @@ describe("AtCoder", () => {
             const mockClient = {
                 get(url: string, options: IOptions) {
                     history.push([url, options])
-                    return Promise.resolve({ code: 200, body: '<a href="javascript:form_logout.submit()"></a>' })
+                    return Promise.resolve({ statusCode: 200, body: '<a href="javascript:form_logout.submit()"></a>' })
                 },
                 postForm(url: string, data: any, options: IOptions) {
                     history.push([url, data, options])
-                    return Promise.resolve({ code: 200, body: "" })
+                    return Promise.resolve({ statusCode: 200, body: "" })
                 },
             }
             const session = new Session()
@@ -58,11 +60,11 @@ describe("AtCoder", () => {
             const mockClient = {
                 get(url: string, _: IOptions) {
                     history.push([url])
-                    return Promise.resolve({ code: 200, body: `[{"id":"c1"},{"id":"c2"}]` })
+                    return Promise.resolve({ statusCode: 200, body: `[{"id":"c1"},{"id":"c2"}]` })
                 },
                 postForm(url: string, data: any, _: IOptions) {
                     history.push([url, data])
-                    return Promise.resolve({ code: 200, body: "" })
+                    return Promise.resolve({ statusCode: 200, body: "" })
                 },
             }
             const session = new Session()

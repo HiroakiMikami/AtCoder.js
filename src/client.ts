@@ -3,7 +3,7 @@ import { ICache } from "./cache"
 import { Session } from "./session"
 
 export interface IResponse {
-    code: number
+    statusCode: number
     body: any
 }
 
@@ -20,32 +20,30 @@ export interface IClient {
 export class HttpClient implements IClient {
     public async get(url: string, options: IOptions): Promise<IResponse> {
         const r = request.defaults({ jar: options.session.cookie })
-        const result: [request.Response, any] = await new Promise((resolve, reject) => {
-            r({ url, headers: options.headers }, (err, response, body) => {
+        return await new Promise((resolve, reject) => {
+            r({ url, headers: options.headers }, (err, response) => {
                 if (err) {
                     reject(err)
                     return
                 }
 
-                resolve([response, body])
+                resolve(response)
             })
         })
-        return { code: result[0].statusCode, body: result[1] }
     }
 
-    public async postForm(url: string, data: any, options: IOptions): Promise<IResponse> {
+    public async postForm(url: string, data: any, options: IOptions): Promise < IResponse > {
         const r = request.defaults({ jar: options.session.cookie })
-        const result: [request.Response, any] = await new Promise((resolve, reject) => {
-            r.post({ url, headers: options.headers, form: data }, (err, response, body) => {
+        return await new Promise((resolve, reject) => {
+            r.post({ url, headers: options.headers, form: data }, (err, response) => {
                 if (err) {
                     reject(err)
                     return
                 }
 
-                resolve([response, body])
+                resolve(response)
             })
         })
-        return { code: result[0].statusCode, body: result[1] }
     }
 }
 
@@ -68,7 +66,7 @@ export class CachedClient implements IClient {
         }
         return response
     }
-    public postForm(url: string, data: any, options: IOptions): Promise<IResponse> {
+    public async postForm(url: string, data: any, options: IOptions): Promise < IResponse > {
         return this.client.postForm(url, data, options)
     }
 }
@@ -78,14 +76,14 @@ export class ClientWithValidation implements IClient {
     }
     public async get(url: string, options: IOptions): Promise<IResponse> {
         const response = await this.client.get(url, options)
-        if (response.code >= 400) {
+        if (response.statusCode >= 400) {
             throw response
         }
         return response
     }
-    public async postForm(url: string, data: any, options: IOptions): Promise<IResponse> {
+    public async postForm(url: string, data: any, options: IOptions): Promise < IResponse > {
         const response = await this.client.postForm(url, data, options)
-        if (response.code >= 400) {
+        if (response.statusCode >= 400)                 {
             throw response
         }
         return response
