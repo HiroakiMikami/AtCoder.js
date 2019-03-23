@@ -1,6 +1,6 @@
 import * as cheerio from "cheerio"
-import { FilesystemCache, MemoryCache } from "./cache"
-import { CachedClient, ClientWithValidation, HttpClient, IClient } from "./client"
+import { CompositeCache, FilesystemCache, ICache, MemoryCache } from "./cache"
+import { CachedClient, ClientWithValidation, HttpClient, IClient, IResponse } from "./client"
 import { Contest } from "./contest"
 import { Session } from "./session"
 
@@ -33,11 +33,15 @@ export class AtCoder {
         const cacheOptions = options.cache || { maxMemoryEntries: 0 }
         const url = options.url || {}
         let client: IClient = rawClient
+        const caches: Array<ICache<string, IResponse>> = []
         if (cacheOptions.maxMemoryEntries !== null) {
-            client = new CachedClient(client, new MemoryCache(cacheOptions.maxMemoryEntries))
+            caches.push(new MemoryCache(cacheOptions.maxMemoryEntries))
         }
         if (cacheOptions.cachedir !== null && cacheOptions.cachedir !== undefined) {
-            client = new CachedClient(rawClient, new FilesystemCache(cacheOptions.cachedir))
+            caches.push(new FilesystemCache(cacheOptions.cachedir))
+        }
+        if (caches.length !== 0) {
+            client = new CachedClient(client, new CompositeCache(caches))
         }
         this.params = {
             client,
