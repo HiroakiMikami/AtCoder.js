@@ -71,3 +71,27 @@ export class FilesystemCache<V> implements ICache<string, V> {
         return null
     }
 }
+
+export class CompositeCache<K, V> implements ICache<K, V> {
+    constructor(private caches: Array<ICache<K, V>>) {}
+    public async put(key: K, value: V): Promise<V> {
+        for (const cache of this.caches) {
+            await cache.put(key, value)
+        }
+        return value
+    }
+    public async get(key: K): Promise<V> {
+        for (const cache of this.caches) {
+            const v = await cache.get(key)
+            if (v !== null) {
+                return v
+            }
+        }
+        return null
+    }
+    public async clear(): Promise<void> {
+        for (const cache of this.caches) {
+            await cache.clear()
+        }
+    }
+}
