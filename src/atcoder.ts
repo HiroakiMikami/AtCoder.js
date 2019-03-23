@@ -12,7 +12,6 @@ export interface IUrl {
 export interface IParams {
     url: { atcoder: string, atcoderProblems: string }
     client: IClient
-    rawClient: IClient
     session: Session
 }
 
@@ -42,7 +41,6 @@ export class AtCoder {
         }
         this.params = {
             client,
-            rawClient,
             session,
             url: {
                 atcoder: url.atcoder || "https://atcoder.jp",
@@ -60,9 +58,14 @@ export class AtCoder {
         if (r2.body !== "") {
             throw new Error(`Login failed: ${r2.body}`)
         }
+
+        // Clear all cache
+        if (this.params.client instanceof CachedClient) {
+            await this.params.client.clearCache()
+        }
     }
     public async isLoggedIn(): Promise<boolean> {
-        const page = await this.params.rawClient.get(this.params.url.atcoder, { session: this.params.session })
+        const page = await this.params.client.get(this.params.url.atcoder, { session: this.params.session })
         const dom = cheerio.load(page.body)
         if (dom('a[href="javascript:form_logout.submit()"]').length === 0) {
             return false
