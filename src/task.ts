@@ -64,8 +64,10 @@ export class Task {
         const samples: ISample[] = []
         let n = 1
         while (true) {
-            const input = this.findSection(tasks, "div#task-statement span.lang-en>div.part", `Sample Input ${n}`)
-            const output = this.findSection(tasks, "div#task-statement span.lang-en>div.part", `Sample Output ${n}`)
+            const input =
+                this.findSection(tasks, "div#task-statement span.lang-en>div.part", RegExp(`Sample Input ${n}`))
+            const output =
+                this.findSection(tasks, "div#task-statement span.lang-en>div.part", RegExp(`Sample Output ${n}`))
             const sample = {
                 input: this.toHtml(tasks, input, "section>pre:nth-child(2)"),
                 notes: this.toHtml(tasks, input, "section>:nth-child(n+3)") +
@@ -79,9 +81,15 @@ export class Task {
         }
         return samples
     }
-    private findSection(root: CheerioStatic, selector: string, title: string): Cheerio {
+    private findSection(root: CheerioStatic, selector: string, title: string | RegExp): Cheerio {
         return root(selector).filter((_, elem) => {
-            return title === root(elem).children().find("section>h3").text()
+            const x = root(elem).children().find("section>h3").text()
+            if (typeof title === "string") {
+                return title === x
+            } else if (title instanceof RegExp) {
+                return title.test(x)
+            }
+            return false
         })
     }
     private toHtml(root: CheerioStatic, dom: Cheerio, selector: string= "section>:not(h3)"): string {

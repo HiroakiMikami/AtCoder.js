@@ -179,7 +179,7 @@ describe("Task", () => {
                     return Promise.resolve({
                         body: "<div id=task-statement><span class=lang-en>" +
                             "<div class=part>" +
-                            "<section><h3>Sample Input 1</h3>" +
+                            "<section><h3>Sample Input 1 <span>Copy</span></h3>" +
                             "<pre>Input</pre>" +
                             "<p>I1.</p><p>I2.</p>" +
                             "</section></div>" +
