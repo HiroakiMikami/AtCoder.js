@@ -106,7 +106,7 @@ describe("Task", () => {
                 get(url: string, options: IOptions) {
                     history.push([url, options])
                     return Promise.resolve({
-                        body: "<div id=task-statement><span class=lang-en>" +
+                        body: "<div id=task-statement><span class=lang-ja>" +
                             "<div class=part><section><h3>問題文</h3>" +
                             "<p>S1.</p><p>S2.</p>" +
                             "</section></div>" +
@@ -121,7 +121,7 @@ describe("Task", () => {
             }
             const session = new Session()
             const atcoder = new AtCoder(session,
-                { rawClient: mockClient, url: { atcoder: "http://tmp" }, languages: new Set([Language.Japanese]) })
+                { rawClient: mockClient, url: { atcoder: "http://tmp" }, languages: [Language.Japanese] })
             const task = atcoder.contest("c1").task("p1")
             const statement = await task.problemStatement()
             statement.should.equal("<p>S1.</p><p>S2.</p>")
@@ -167,7 +167,7 @@ describe("Task", () => {
                 get(url: string, options: IOptions) {
                     history.push([url, options])
                     return Promise.resolve({
-                        body: "<div id=task-statement><span class=lang-en>" +
+                        body: "<div id=task-statement><span class=lang-ja>" +
                             "<div class=part><section><h3>制約</h3>" +
                             "<p>S1.</p><p>S2.</p>" +
                             "</section></div>" +
@@ -182,7 +182,7 @@ describe("Task", () => {
             }
             const session = new Session()
             const atcoder = new AtCoder(session,
-                { rawClient: mockClient, url: { atcoder: "http://tmp" }, languages: new Set([Language.Japanese]) })
+                { rawClient: mockClient, url: { atcoder: "http://tmp" }, languages: [Language.Japanese] })
             const task = atcoder.contest("c1").task("p1")
             const c = await task.constraints()
             c.should.equal("<p>S1.</p><p>S2.</p>")
@@ -235,7 +235,7 @@ describe("Task", () => {
                 get(url: string, options: IOptions) {
                     history.push([url, options])
                     return Promise.resolve({
-                        body: "<div id=task-statement><span class=lang-en>" +
+                        body: "<div id=task-statement><span class=lang-ja>" +
                             "<div class=io-style><div class=part>" +
                             "<section><h3>入力</h3>" +
                             "<p>I1.</p><p>I2.</p>" +
@@ -254,7 +254,7 @@ describe("Task", () => {
             }
             const session = new Session()
             const atcoder = new AtCoder(session,
-                { rawClient: mockClient, url: { atcoder: "http://tmp" }, languages: new Set([Language.Japanese]) })
+                { rawClient: mockClient, url: { atcoder: "http://tmp" }, languages: [Language.Japanese] })
             const task = atcoder.contest("c1").task("p1")
             const f = await task.format()
             f.should.deep.equal({
@@ -315,7 +315,7 @@ describe("Task", () => {
                 get(url: string, options: IOptions) {
                     history.push([url, options])
                     return Promise.resolve({
-                        body: "<div id=task-statement><span class=lang-en>" +
+                        body: "<div id=task-statement><span class=lang-ja>" +
                             "<div class=part>" +
                             "<section><h3>入力例 1 <span>Copy</span></h3>" +
                             "<pre>Input</pre>" +
@@ -338,7 +338,7 @@ describe("Task", () => {
             }
             const session = new Session()
             const atcoder = new AtCoder(session,
-                { rawClient: mockClient, url: { atcoder: "http://tmp" }, languages: new Set([Language.Japanese]) })
+                { rawClient: mockClient, url: { atcoder: "http://tmp" }, languages: [Language.Japanese] })
             const task = atcoder.contest("c1").task("p1")
             const e = await task.examples()
             e.should.deep.equal([{
