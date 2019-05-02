@@ -20,31 +20,36 @@ export interface ITaskInfo {
 }
 
 export class Task {
+    private static LANG() {
+        return new Map([
+            [Language.English, "lang-en"], [Language.Japanese, "lang-ja"],
+        ])
+    }
     private static TITLES() {
         return {
-            constraints: [
+            constraints: new Map([
                 [Language.English, "Constraints"], [Language.Japanese, "制約"],
-            ] as ReadonlyArray<[Language, string]>,
-            input: [
+            ]),
+            input: new Map([
                 [Language.English, "Input"], [Language.Japanese, "入力"],
-            ] as ReadonlyArray<[Language, string]>,
-            output: [
+            ]),
+            output: new Map([
                 [Language.English, "Output"], [Language.Japanese, "出力"],
-            ] as ReadonlyArray<[Language, string]>,
-            problemStatement: [
+            ]),
+            problemStatement: new Map([
                 [Language.English, "Problem Statement"], [Language.Japanese, "問題文"],
-            ] as ReadonlyArray<[Language, string]>,
-            sampleInput: [
+            ]),
+            sampleInput: new Map([
                 [Language.English, "Sample Input"], [Language.Japanese, "入力例"],
-            ] as ReadonlyArray<[Language, string]>,
-            sampleOutput: [
+            ]),
+            sampleOutput: new Map([
                 [Language.English, "Sample Output"], [Language.Japanese, "出力例"],
-            ] as ReadonlyArray<[Language, string]>,
+            ]),
         }
     }
 
     private tasksPage: Promise<CheerioStatic> | null
-    private languages: ReadonlySet<Language>
+    private languages: ReadonlyArray<Language>
     constructor(private contestId: string, private id: string,
                 private params: IParams) {
         this.tasksPage = null
@@ -68,49 +73,44 @@ export class Task {
         return Number(score)
     }
     public async problemStatement(): Promise<string> {
+        const lang = await this.language()
         const tasks = await this.sendRequest()
-        const titles = Task.TITLES().problemStatement
-            .filter((xs) => this.languages.has(xs[0]))
-            .map((xs) => RegExp(`^${xs[1]}$`))
+        const title = RegExp(`^${Task.TITLES().problemStatement.get(lang)}$`)
         return this.toHtml(tasks,
-                this.findSection(tasks, "div#task-statement span.lang-en>div.part", titles))
+            this.findSection(tasks, `div#task-statement span.${Task.LANG().get(lang)}>div.part`, title))
     }
     public async constraints(): Promise<string> {
+        const lang = await this.language()
         const tasks = await this.sendRequest()
-        const titles = Task.TITLES().constraints
-            .filter((xs) => this.languages.has(xs[0]))
-            .map((xs) => RegExp(`^${xs[1]}$`))
-        return this.toHtml(tasks, this.findSection(tasks, "div#task-statement span.lang-en>div.part", titles))
+        const title = RegExp(`^${Task.TITLES().constraints.get(lang)}$`)
+        return this.toHtml(tasks,
+            this.findSection(tasks, `div#task-statement span.${Task.LANG().get(lang)}>div.part`, title))
     }
     public async format(): Promise<IFormat> {
+        const lang = await this.language()
         const tasks = await this.sendRequest()
-        const inputTitles = Task.TITLES().input
-            .filter((xs) => this.languages.has(xs[0]))
-            .map((xs) => RegExp(`^${xs[1]}$`))
+        const inputTitle = RegExp(`^${Task.TITLES().input.get(lang)}$`)
         const input = this.toHtml(tasks,
-                this.findSection(tasks, "div#task-statement span.lang-en>div.io-style>div.part", inputTitles))
-        const outputTitles = Task.TITLES().output
-            .filter((xs) => this.languages.has(xs[0]))
-            .map((xs) => RegExp(`^${xs[1]}$`))
+                this.findSection(tasks,
+                    `div#task-statement span.${Task.LANG().get(lang)}>div.io-style>div.part`, inputTitle))
+        const outputTitle = RegExp(`^${Task.TITLES().output.get(lang)}$`)
         const output = this.toHtml(tasks,
-                this.findSection(tasks, "div#task-statement span.lang-en>div.io-style>div.part", outputTitles))
+                this.findSection(tasks,
+                    `div#task-statement span.${Task.LANG().get(lang)}>div.io-style>div.part`, outputTitle))
         return { input, output }
     }
     public async examples(): Promise<ISample[]> {
+        const lang = await this.language()
         const tasks = await this.sendRequest()
         const samples: ISample[] = []
         let n = 1
         while (true) {
-            const inputTitles = Task.TITLES().sampleInput
-                .filter((xs) => this.languages.has(xs[0]))
-                .map((xs) => RegExp(`${xs[1]} ${n}`))
+            const inputTitle = RegExp(`${Task.TITLES().sampleInput.get(lang)} ${n}`)
             const input =
-                this.findSection(tasks, "div#task-statement span.lang-en>div.part", inputTitles)
-            const outputTitles = Task.TITLES().sampleOutput
-                .filter((xs) => this.languages.has(xs[0]))
-                .map((xs) => RegExp(`${xs[1]} ${n}`))
+                this.findSection(tasks, `div#task-statement span.${Task.LANG().get(lang)}>div.part`, inputTitle)
+            const outputTitle = RegExp(`${Task.TITLES().sampleOutput.get(lang)} ${n}`)
             const output =
-                this.findSection(tasks, "div#task-statement span.lang-en>div.part", outputTitles)
+                this.findSection(tasks, `div#task-statement span.${Task.LANG().get(lang)}>div.part`, outputTitle)
             const sample = {
                 input: this.toHtml(tasks, input, "section>pre:nth-child(2)"),
                 notes: this.toHtml(tasks, input, "section>:nth-child(n+3)") +
@@ -124,10 +124,19 @@ export class Task {
         }
         return samples
     }
-    private findSection(root: CheerioStatic, selector: string, title: ReadonlyArray<RegExp>): Cheerio {
+    private async language(): Promise<Language | null> {
+        const root = await this.sendRequest()
+        for (const lang of this.languages) {
+            if (root(`div#task-statement span.${Task.LANG().get(lang)}`).length !== 0) {
+                return lang
+            }
+        }
+        return null
+    }
+    private findSection(root: CheerioStatic, selector: string, title: RegExp): Cheerio {
         return root(selector).filter((_, elem) => {
             const x = root(elem).children().find("section>h3").text()
-            return title.some((t) => t.test(x))
+            return title.test(x)
         })
     }
     private toHtml(root: CheerioStatic, dom: Cheerio, selector: string= "section>:not(h3)"): string {

@@ -18,7 +18,7 @@ export interface IParams {
     url: { atcoder: string, atcoderProblems: string }
     client: IClient
     session: Session
-    languages: ReadonlySet<Language>
+    languages: ReadonlyArray<Language>
 }
 
 export interface ICacheOptions {
@@ -30,7 +30,7 @@ export interface IOptions {
     cache?: ICacheOptions
     rawClient?: IClient
     url?: IUrl
-    languages?: ReadonlySet<Language>
+    languages?: ReadonlyArray<Language>
 }
 
 export class AtCoder {
@@ -52,7 +52,7 @@ export class AtCoder {
         }
         this.params = {
             client,
-            languages: options.languages || new Set([Language.English]),
+            languages: options.languages || [Language.English],
             session,
             url: {
                 atcoder: url.atcoder || "https://atcoder.jp",
