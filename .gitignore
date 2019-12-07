@@ -3,7 +3,7 @@
 !/.gitignore
 !/LICENSE
 !/README.md
-!/.circleci/config.yml
+!/.github/**/*.yml
 !/tsconfig.json
 !/tslint.json
 !/package.json
