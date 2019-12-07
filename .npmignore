@@ -1,0 +1,9 @@
+test/
+bin/
+src/
+out/test/
+.github/
+README.md
+.npmrc
+tslint.json
+tsconfig.json

@@ -1,6 +1,7 @@
 *
 !*/
 !/.gitignore
+!/.npmignore
 !/LICENSE
 !/README.md
 !/.github/**/*.yml

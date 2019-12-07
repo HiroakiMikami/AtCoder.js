@@ -1,8 +1,7 @@
 {
-  "private": true,
-  "name": "atcoder.js",
+  "name": "@hiroakimikami/atcoder.js",
   "version": "0.0.1",
-  "description": "",
+  "description": "A Node.js module to access AtCoder",
   "bin": {},
   "scripts": {
     "compile": "$(npm bin)/tsc -p ./",
@@ -17,7 +16,7 @@
   "types": "out/src/main.d.ts",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/HiroakiMikami/AtCoder.js.git"
+    "url": "git://github.com/HiroakiMikami/AtCoder.js.git"
   },
   "author": "Hiroaki Mikami",
   "license": "MIT",
@@ -42,5 +41,8 @@
     "cheerio": "^1.0.0-rc.2",
     "@types/request": "^2.48.1",
     "request": "^2.88.0"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
   }
 }
